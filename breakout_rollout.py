@@ -1,4 +1,4 @@
-from breakout_envorinment import Environment
+from breakout_environment import Environment
 from multiprocessing import Pipe
 import numpy as np
 import matplotlib.pyplot as plt
