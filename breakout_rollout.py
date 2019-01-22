@@ -5,13 +5,16 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from agent.a2c import CNN
 from tensorboardX import SummaryWriter
+from model import *
 
 writer = SummaryWriter()
 sess = tf.Session()
 num_worker = 8
 num_step = 64
 window_size, output_size, obs_stack = 84, 3, 4
-agent = CNN(sess, window_size, obs_stack, output_size, num_worker, num_step)
+actor = CNNActor('actor', window_size, obs_stack, output_size)
+critic = CNNCritic('critic', window_size, obs_stack)
+agent = CNN(sess, window_size, obs_stack, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 #saver.restore(sess, 'breakout/model')
