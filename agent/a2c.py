@@ -4,14 +4,14 @@ from model import *
 import copy
 
 class CNN:
-    def __init__(self, sess, window_size, obs_stack, output_size, num_worker, num_step):
+    def __init__(self, sess, window_size, obs_stack, output_size, num_worker, num_step, actor, critic):
         self.sess = sess
         self.window_size = window_size
         self.obs_stack = obs_stack
         self.output_size = output_size
 
-        self.actor = CNNActor('actor', self.window_size, self.obs_stack, self.output_size)
-        self.critic = CNNCritic('critic', self.window_size, self.obs_stack)
+        self.actor = actor
+        self.critic = critic
 
         self.gamma = 0.99
         self.lamda = 0.9
