@@ -52,10 +52,7 @@ while True:
             parent_conn.send(action)
 
         next_states, rewards, dones, real_dones = [], [], [], []
-        #next_states = []
-        #rewards = []
-        #dones = []
-        #real_dones = []
+
         for parent_conn in parent_conns:
             s, r, d, rd = parent_conn.recv()
             next_states.append(s)
@@ -80,8 +77,9 @@ while True:
 
         if real_dones[sample_idx]:
             episode += 1
-            writer.add_scalar('data/reward_per_episode', score, episode)
             print(episode, score)
+            if episode < 500:
+                writer.add_scalar('data/reward_per_episode', score, episode)
             score = 0
 
     total_state = np.stack(total_state).transpose([1, 0, 2, 3, 4]).reshape([-1, window_size, window_size, obs_stack])
