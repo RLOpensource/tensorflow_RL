@@ -20,6 +20,7 @@ class CNN:
         self.grad_clip_max = 1.0
         self.grad_clip_min = -1.0
         self.cof_entropy = 0.5
+        self.batch_size = 16 * 32
         
         self.actor_pi_trainable = self.actor.get_trainable_variables()
         self.critic_pi_trainable = self.critic.get_trainable_variables()
@@ -50,12 +51,22 @@ class CNN:
 
 
     def train_model(self, state, action, targets, advs):
-        self.sess.run(self.critic_train_op, feed_dict={self.critic.input: state,
-                                                self.targets: targets})
+        sample_range = np.arange(len(state))
+        np.random.shuffle(sample_range)
+        if len(state) < self.batch_size:
+            train_size = len(state)
+        else:
+            train_size = self.batch_size
+        state_batch = [state[sample_range[i]] for i in range(train_size)]
+        action_batch = [action[sample_range[i]] for i in range(train_size)]
+        targets_batch = [targets[sample_range[i]] for i in range(train_size)]
+        advs_batch = [advs[sample_range[i]] for i in range(train_size)]
+        self.sess.run(self.critic_train_op, feed_dict={self.critic.input: state_batch,
+                                                self.targets: targets_batch})
         
-        self.sess.run(self.actor_train_op, feed_dict={self.actor.input: state,
-                                                self.actions: action,
-                                                self.adv: advs})
+        self.sess.run(self.actor_train_op, feed_dict={self.actor.input: state_batch,
+                                                self.actions: action_batch,
+                                                self.adv: advs_batch})
 
 
     def get_action(self, state):
@@ -67,14 +78,3 @@ class CNN:
         value = self.sess.run(self.value, feed_dict={self.critic.input: state})
         next_value = self.sess.run(self.value, feed_dict={self.critic.input: next_state})
         return value, next_value
-
-    def get_gaes(self, rewards, dones, values, next_values):
-        deltas = [r + self.gamma * (1 - d) * nv - v for r, d, nv, v in zip(rewards, dones, next_values, values)]
-        deltas = np.stack(deltas)
-        gaes = copy.deepcopy(deltas)
-        for t in reversed(range(len(deltas) - 1)):
-            gaes[t] = gaes[t] + (1 - dones[t]) * self.gamma * self.lamda * gaes[t + 1]
-
-        target = gaes + values
-        gaes = (gaes - gaes.mean()) / (gaes.std() + 1e-30)
-        return gaes, target

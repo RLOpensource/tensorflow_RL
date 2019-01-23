@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from agent.a2c import CNN
+from agent.utils import get_gaes
 from tensorboardX import SummaryWriter
 from model import *
 
@@ -18,6 +19,7 @@ agent = CNN(sess, window_size, obs_stack, output_size, num_worker, num_step, act
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 #saver.restore(sess, 'breakout/model')
+learning = True
 
 global_update = 0
 sample_idx = 0
@@ -78,29 +80,28 @@ while True:
         if real_dones[sample_idx]:
             episode += 1
             print(episode, score)
-            if episode < 500:
-                writer.add_scalar('data/reward_per_episode', score, episode)
+            writer.add_scalar('data/reward_per_episode', score, episode)
             score = 0
 
-    total_state = np.stack(total_state).transpose([1, 0, 2, 3, 4]).reshape([-1, window_size, window_size, obs_stack])
-    total_next_state = np.stack(total_next_state).transpose([1, 0, 2, 3, 4]).reshape([-1, window_size, window_size, obs_stack])
-    total_action = np.stack(total_action).transpose([1, 0]).reshape([-1])
-    total_done = np.stack(total_done).transpose([1, 0]).reshape([-1])
-    total_reward = np.stack(total_reward).transpose([1, 0]).reshape([-1])
+    if learning:
+        total_state = np.stack(total_state).transpose([1, 0, 2, 3, 4]).reshape([-1, window_size, window_size, obs_stack])
+        total_next_state = np.stack(total_next_state).transpose([1, 0, 2, 3, 4]).reshape([-1, window_size, window_size, obs_stack])
+        total_action = np.stack(total_action).transpose([1, 0]).reshape([-1])
+        total_done = np.stack(total_done).transpose([1, 0]).reshape([-1])
+        total_reward = np.stack(total_reward).transpose([1, 0]).reshape([-1])
 
-    total_target, total_adv = [], []
-    for idx in range(num_worker):
-        value, next_value = agent.get_value(total_state[idx * num_step:(idx + 1) * num_step],
-                                            total_next_state[idx * num_step:(idx + 1) * num_step])
-        adv, target = agent.get_gaes(total_reward[idx * num_step:(idx + 1) * num_step],
-                                    total_done[idx * num_step:(idx + 1) * num_step],
-                                    value,
-                                    next_value)
-        total_target.append(target)
-        total_adv.append(adv)
+        total_target, total_adv = [], []
+        for idx in range(num_worker):
+            value, next_value = agent.get_value(total_state[idx * num_step:(idx + 1) * num_step],
+                                                total_next_state[idx * num_step:(idx + 1) * num_step])
+            adv, target = get_gaes(total_reward[idx * num_step:(idx + 1) * num_step],
+                                        total_done[idx * num_step:(idx + 1) * num_step],
+                                        value, next_value, agent.gamma, agent.lamda)
+            total_target.append(target)
+            total_adv.append(adv)
 
 
-    agent.train_model(total_state, total_action, np.hstack(total_target), np.hstack(total_adv))
+        agent.train_model(total_state, total_action, np.hstack(total_target), np.hstack(total_adv))
 
-    writer.add_scalar('data/reward_per_rollout', sum(total_reward)/(num_worker), global_update)
-    saver.save(sess, 'breakout/model')
+        writer.add_scalar('data/reward_per_rollout', sum(total_reward)/(num_worker), global_update)
+        saver.save(sess, 'breakout/model')
