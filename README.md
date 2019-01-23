@@ -10,7 +10,10 @@ However! Just use PPO!
 
 What you have to do to research with this Repository is 'just make your own model' with approprepate input, output variable such as input, actor, critic.
 
+## 
+
 ## ToDo List
+
 - [ ] PPO agent
 - [x] A2C agent
 - [ ] Vanilla PG agent
@@ -34,10 +37,11 @@ What you have to do to research with this Repository is 'just make your own mode
 - [https://github.com/SunandBean](https://github.com/SunandBean)
 - [https://github.com/TinkTheBoush](https://github.com/TinkTheBoush)
 
-## Thanks for Contributing to our Repository
-
 ## License
 
+We do not have the copyright to this repository.
+
+Please 'just' use these code and just 'refer' the url of repository in any form.
 
 
 ## Reference
@@ -51,3 +55,5 @@ What you have to do to research with this Repository is 'just make your own mode
 [3] [High-Dimensional Continuous Control Using Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438)
 
 [4] [Asynchronous Methods for Deep Reinforcement Learning](https://arxiv.org/abs/1602.01783)
+
+## Please fork this repository and contribute to strengthen the tensorflow reinforcement learning ecosystem
