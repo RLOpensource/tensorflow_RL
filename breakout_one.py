@@ -2,8 +2,8 @@ from breakout_environment import Environment
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from agent.a2c import A2C_CNN
-from agent.ppo import PPO_CNN
+from agent.discrete.a2c import A2C_CNN
+from agent.discrete.ppo import PPO_CNN
 from agent.utils import get_gaes
 from tensorboardX import SummaryWriter
 from model import *

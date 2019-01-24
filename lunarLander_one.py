@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorboardX import SummaryWriter
 from lunarLander_environment import Environment
 from multiprocessing import Process, Pipe
-from agent.ppo import PPO_MLP
+from agent.discrete.ppo import PPO_MLP
 from agent.utils import get_gaes
 from model import *
 import gym

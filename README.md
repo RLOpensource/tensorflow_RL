@@ -10,8 +10,6 @@ However! Just use PPO!
 
 What you have to do to research with this Repository is 'just make your own model' with approprepate input, output variable such as input, actor, critic.
 
-## 
-
 ## ToDo List
 
 - [x] PPO_MLP agent
@@ -35,6 +33,7 @@ What you have to do to research with this Repository is 'just make your own mode
 - [ ] Merge PPO_MLP & PPO_CNN in one class
 - [ ] Merge A2C_MLP & A2C_CNN in one class
 - [ ] Merge Vanilla PG_MLP & Vanilla PG_CNN in one class
+- [ ] All agent to make parameter sharing model
 
 
 ## Member
