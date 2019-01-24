@@ -14,13 +14,16 @@ What you have to do to research with this Repository is 'just make your own mode
 
 ## ToDo List
 
-- [ ] PPO agent
-- [x] A2C agent
-- [ ] Vanilla PG agent
-- [ ] PPO test in one lunarlander env
-- [ ] PPO test in one breakout env
-- [ ] PPO test in rollout PAAC breakout env
-- [ ] PPO test in rollout PAAC lunarlander env
+- [x] PPO_MLP agent
+- [x] PPO_CNN agent
+- [ ] A2C_MLP agent
+- [x] A2C_CNN agent
+- [ ] Vanilla PG_MLP agent
+- [ ] Vanilla PG_CNN agent
+- [x] PPO test in one lunarlander env
+- [x] PPO test in one breakout env
+- [x] PPO test in rollout PAAC breakout env
+- [x] PPO test in rollout PAAC lunarlander env
 - [ ] A2C test in one lunarlander env
 - [x] A2C test in one breakout env
 - [x] A2C test in rollout PAAC breakout env
@@ -29,6 +32,9 @@ What you have to do to research with this Repository is 'just make your own mode
 - [ ] Vanilla PG test in one breakout env
 - [ ] Vanilla PG test in rollout PAAC breakout env
 - [ ] Vanilla PG test in rollout PAAC lunarlander env
+- [ ] Merge PPO_MLP & PPO_CNN in one class
+- [ ] Merge A2C_MLP & A2C_CNN in one class
+- [ ] Merge Vanilla PG_MLP & Vanilla PG_CNN in one class
 
 
 ## Member

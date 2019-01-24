@@ -1,9 +1,8 @@
 import numpy as np
 import tensorflow as tf
-from model import *
 import copy
 
-class A2C:
+class A2C_CNN:
     def __init__(self, sess, window_size, obs_stack, output_size, num_worker, num_step, actor, critic):
         self.sess = sess
         self.window_size = window_size
