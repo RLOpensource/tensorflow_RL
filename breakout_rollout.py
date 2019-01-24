@@ -3,7 +3,8 @@ from multiprocessing import Pipe
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from agent.a2c import A2C
+from agent.a2c import A2C_CNN
+from agent.ppo import PPO_CNN
 from agent.utils import get_gaes
 from tensorboardX import SummaryWriter
 from model import *
@@ -15,7 +16,8 @@ num_step = 64
 window_size, output_size, obs_stack = 84, 3, 4
 actor = CNNActor('actor', window_size, obs_stack, output_size)
 critic = CNNCritic('critic', window_size, obs_stack)
-agent = A2C(sess, window_size, obs_stack, output_size, num_worker, num_step, actor, critic)
+#agent = A2C_CNN(sess, window_size, obs_stack, output_size, num_worker, num_step, actor, critic)
+agent = PPO_CNN(sess, window_size, obs_stack, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 #saver.restore(sess, 'breakout/model')
