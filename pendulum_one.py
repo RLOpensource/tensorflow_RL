@@ -19,7 +19,7 @@ critic = MLPContinuousCritic('critic', state_size)
 agent = PPO(sess, state_size, output_size, 4, 128, old_actor, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
-saver.restore(sess, 'pendulum/model')
+#saver.restore(sess, 'pendulum/model')
 agent.lamda = 0.9
 
 ep_len = 200
@@ -33,7 +33,7 @@ while True:
     total_state, total_reward, total_done, total_next_state, total_action = [], [], [], [], []
     score = 0
     for t in range(ep_len):
-        env.render()
+        #env.render()
         action = agent.get_action([state], clip)
         action = action[0]
         next_state, reward, done, _ = env.step(action)
