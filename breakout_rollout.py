@@ -23,6 +23,7 @@ saver = tf.train.Saver()
 #saver.restore(sess, 'breakout/model')
 learning = True
 
+normalize = True
 global_update = 0
 sample_idx = 0
 score = 0
@@ -98,7 +99,7 @@ while True:
                                                 total_next_state[idx * num_step:(idx + 1) * num_step])
             adv, target = get_gaes(total_reward[idx * num_step:(idx + 1) * num_step],
                                         total_done[idx * num_step:(idx + 1) * num_step],
-                                        value, next_value, agent.gamma, agent.lamda)
+                                        value, next_value, agent.gamma, agent.lamda, normalize)
             total_target.append(target)
             total_adv.append(adv)
 
