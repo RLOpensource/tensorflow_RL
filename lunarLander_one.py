@@ -28,6 +28,7 @@ agent = A2C(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 
+normalize = True
 env = gym.make('LunarLander-v2')
 train_size = 16
 update_step = 0
@@ -62,7 +63,7 @@ while True:
         total_reward = np.stack(total_reward)
 
         value, next_value = agent.get_value(total_state, total_next_state)
-        adv, target = get_gaes(total_reward, total_done, value, next_value, agent.gamma, agent.lamda)
+        adv, target = get_gaes(total_reward, total_done, value, next_value, agent.gamma, agent.lamda, normalize)
 
         agent.train_model(total_state, total_action, np.hstack(target), np.hstack(adv))
         writer.add_scalar('data/reward_per_episode', sum(total_reward) / train_size, update_step)

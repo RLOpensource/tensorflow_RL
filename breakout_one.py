@@ -25,6 +25,7 @@ saver = tf.train.Saver()
 
 env = gym.make('BreakoutDeterministic-v4')
 
+normalize = True
 train_size = 16
 update_step = 0
 episode = 0
@@ -87,7 +88,7 @@ while True:
         total_reward = np.stack(total_reward)
 
         value, next_value = agent.get_value(total_state, total_next_state)
-        adv, target = get_gaes(total_reward, total_done, value, next_value, agent.gamma, agent.lamda)
+        adv, target = get_gaes(total_reward, total_done, value, next_value, agent.gamma, agent.lamda, normalize)
 
         agent.train_model(total_state, total_action, np.hstack(target), np.hstack(adv))
         writer.add_scalar('data/reward_per_episode', sum(total_reward) / train_size, update_step)
