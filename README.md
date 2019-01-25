@@ -10,29 +10,25 @@ However! Just use PPO!
 
 What you have to do to research with this Repository is 'just make your own model' with approprepate input, output variable such as input, actor, critic.
 
+## Result
+
 ## ToDo List
 
-- [x] PPO_MLP agent
-- [x] PPO_CNN agent
-- [ ] A2C_MLP agent
-- [x] A2C_CNN agent
-- [ ] Vanilla PG_MLP agent
-- [ ] Vanilla PG_CNN agent
+- [x] PPO agent
+- [x] A2C agent
+- [ ] Vanilla PG agent
 - [x] PPO test in one lunarlander env
 - [x] PPO test in one breakout env
 - [x] PPO test in rollout PAAC breakout env
 - [x] PPO test in rollout PAAC lunarlander env
-- [ ] A2C test in one lunarlander env
+- [x] A2C test in one lunarlander env
 - [x] A2C test in one breakout env
 - [x] A2C test in rollout PAAC breakout env
-- [ ] A2C test in rollout PAAC lunarlander env
+- [x] A2C test in rollout PAAC lunarlander env
 - [ ] Vanilla PG test in one lunarlander env
 - [ ] Vanilla PG test in one breakout env
 - [ ] Vanilla PG test in rollout PAAC breakout env
 - [ ] Vanilla PG test in rollout PAAC lunarlander env
-- [ ] Merge PPO_MLP & PPO_CNN in one class
-- [ ] Merge A2C_MLP & A2C_CNN in one class
-- [ ] Merge Vanilla PG_MLP & Vanilla PG_CNN in one class
 - [ ] All agent to make parameter sharing model
 
 
@@ -62,3 +58,5 @@ Please 'just' use these code and just 'refer' the url of repository in any form.
 [4] [Asynchronous Methods for Deep Reinforcement Learning](https://arxiv.org/abs/1602.01783)
 
 ## Please fork this repository and contribute to strengthen the tensorflow reinforcement learning ecosystem
+
+## Support us in any form. Thank you

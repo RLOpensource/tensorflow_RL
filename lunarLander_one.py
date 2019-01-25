@@ -3,8 +3,8 @@ import tensorflow as tf
 from tensorboardX import SummaryWriter
 from lunarLander_environment import Environment
 from multiprocessing import Process, Pipe
-from agent.discrete.ppo import PPO_MLP
-from agent.discrete.ppo import PPO
+from agent.discrete.seperate.a2c import A2C
+from agent.discrete.seperate.ppo import PPO
 from agent.utils import get_gaes
 from model import *
 import gym
@@ -23,7 +23,8 @@ sess = tf.Session()
 state_size, output_size = 8, 4
 actor = MLPActor('actor', state_size, output_size)
 critic = MLPCritic('critic', state_size)
-agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
+agent = A2C(sess, output_size, num_worker, num_step, actor, critic)
+#agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 
