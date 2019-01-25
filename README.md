@@ -29,7 +29,6 @@ What you have to do to research with this Repository is 'just make your own mode
 - [ ] Vanilla PG test in one breakout env
 - [ ] Vanilla PG test in rollout PAAC breakout env
 - [ ] Vanilla PG test in rollout PAAC lunarlander env
-- [ ] All agent to make parameter sharing model
 
 
 ## Member
