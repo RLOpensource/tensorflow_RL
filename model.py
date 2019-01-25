@@ -1,25 +1,5 @@
 import tensorflow as tf
 
-class MLPContinuousCritic:
-    def __init__(self, name, state_size):
-        self.state_size = state_size
-
-        with tf.variable_scope(name):
-            self.input = tf.placeholder(dtype=tf.float32, shape=[None, self.state_size])
-            self.dense_1 = tf.layers.dense(inputs=self.input, units=100, activation=tf.nn.relu)
-            self.critic = tf.layers.dense(inputs=self.dense_1, units=1, activation=None)
-
-            self.scope = tf.get_variable_scope().name
-
-    def get_action_prob(self, obs):
-        return self.sess.run(self.act_probs, feed_dict={self.obs: obs})
-
-    def get_variables(self):
-        return tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, self.scope)
-
-    def get_trainable_variables(self):
-        return tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, self.scope)
-
 class MLPContinuousActor:
     def __init__(self, name, state_size, output_size):
         self.state_size = state_size
@@ -27,15 +7,30 @@ class MLPContinuousActor:
 
         with tf.variable_scope(name):
             self.input = tf.placeholder(dtype=tf.float32, shape=[None, self.state_size])
-            self.dense_1 = tf.layers.dense(inputs=self.input, units=100, activation=tf.nn.relu)
-            self.mu = 2 * tf.layers.dense(self.dense_1, self.output_size, activation=tf.nn.tanh)
-            self.sigma = tf.layers.dense(self.dense_1, self.output_size, activation=tf.nn.softplus)
-            self.actor = tf.distributions.Normal(loc=self.mu, scale=self.sigma)
+            self.l1 = tf.layers.dense(self.input, 256, tf.nn.relu, trainable=True)
+            self.mu = 2 * tf.layers.dense(self.l1, self.output_size, tf.nn.tanh, trainable=True)
+            self.sigma = tf.layers.dense(self.l1, self.output_size, tf.nn.softplus, trainable=True)
 
+            self.actor = tf.distributions.Normal(loc=self.mu, scale=self.sigma)
+        
             self.scope = tf.get_variable_scope().name
 
-    def get_action_prob(self, obs):
-        return self.sess.run(self.act_probs, feed_dict={self.obs: obs})
+    def get_variables(self):
+        return tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, self.scope)
+
+    def get_trainable_variables(self):
+        return tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, self.scope)
+
+class MLPContinuousCritic:
+    def __init__(self, name, state_size):
+        self.state_size = state_size
+
+        with tf.variable_scope(name):
+            self.input = tf.placeholder(dtype=tf.float32, shape=[None, self.state_size])
+            self.l1 = tf.layers.dense(self.input, 256, tf.nn.relu, trainable=True)
+            self.critic = tf.layers.dense(self.l1, 1)
+
+            self.scope = tf.get_variable_scope().name
 
     def get_variables(self):
         return tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, self.scope)
