@@ -43,6 +43,7 @@ We do not have the copyright to this repository.
 
 Please 'just' use these code and just 'refer' the url of repository in any form.
 
+[MIT License](./LICENSE)
 
 ## Reference
 
@@ -50,11 +51,15 @@ Please 'just' use these code and just 'refer' the url of repository in any form.
 
 [2] [Proximal Policy Optimization](https://arxiv.org/abs/1707.06347)
 
-[2] [Efficient Parallel Methods for Deep Reinforcement Learning](https://arxiv.org/abs/1705.04862)
+[3] [Efficient Parallel Methods for Deep Reinforcement Learning](https://arxiv.org/abs/1705.04862)
 
-[3] [High-Dimensional Continuous Control Using Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438)
+[4] [High-Dimensional Continuous Control Using Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438)
 
-[4] [Asynchronous Methods for Deep Reinforcement Learning](https://arxiv.org/abs/1602.01783)
+[5] [Asynchronous Methods for Deep Reinforcement Learning](https://arxiv.org/abs/1602.01783)
+
+[6] [Continuous Control With Deep Reinforcement Learning](https://arxiv.org/pdf/1509.02971.pdf)
+
+[7] [Vanilla Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/vpg.html)
 
 ## Please fork this repository and contribute to strengthen the tensorflow reinforcement learning ecosystem
 
