@@ -45,3 +45,5 @@ Please 'just' use these code and just 'refer' the url of repository in any form.
 ## Please fork this repository and contribute to strengthen the tensorflow reinforcement learning ecosystem
 
 ## Support us in any form. Thank you
+
+Content us to [chagmgang@gmail.com](chagmgang@gmail.com)
