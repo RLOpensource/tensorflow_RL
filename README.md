@@ -1,35 +1,16 @@
 # This Repository is Reinforcement Learning Agent FramWork
 
-We provide the example source code to implement the Reinforcement Learning(Vanilla PG, A2C, PPO) using this framework.
+We provide the example source code to implement the Reinforcement Learning(Vanilla PG, A2C, PPO, DDPG) using this framework.
 
-The example source code is done in the representative image and vector state environment provided by openai(BreakoutDeterministic-v4, LunarLander-v2).
+The example source code is done in the representative image and vector state environment provided by openai gym.
 
 This Repository include Vanilla PG, A2C, PPO based on Parallel Advantage Actor Critic.
 
-However! Just use PPO!
+However! Just use PPO in discrete action space. Just use DDPG in continuous action space!
 
 What you have to do to research with this Repository is 'just make your own model' with approprepate input, output variable such as input, actor, critic.
 
 ## Result
-
-## ToDo List
-
-- [x] PPO agent
-- [x] A2C agent
-- [ ] Vanilla PG agent
-- [x] PPO test in one lunarlander env
-- [x] PPO test in one breakout env
-- [x] PPO test in rollout PAAC breakout env
-- [x] PPO test in rollout PAAC lunarlander env
-- [x] A2C test in one lunarlander env
-- [x] A2C test in one breakout env
-- [x] A2C test in rollout PAAC breakout env
-- [x] A2C test in rollout PAAC lunarlander env
-- [ ] Vanilla PG test in one lunarlander env
-- [ ] Vanilla PG test in one breakout env
-- [ ] Vanilla PG test in rollout PAAC breakout env
-- [ ] Vanilla PG test in rollout PAAC lunarlander env
-
 
 ## Member
 
