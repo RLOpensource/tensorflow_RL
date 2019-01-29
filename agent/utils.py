@@ -12,3 +12,19 @@ def get_gaes(rewards, dones, values, next_values, gamma, lamda, normalize):
     if normalize:
         gaes = (gaes - gaes.mean()) / (gaes.std() + 1e-30)
     return gaes, target
+
+class OU_noise:
+    def __init__(self,action_size,worker_size,mu=0,theta=0.05,sigma=0.2):
+        self.action_size = action_size
+        self.worker_size = worker_size
+        self.mu = mu
+        self.theta = theta
+        self.sigma = sigma
+        self.reset()
+
+    def reset(self):
+        self.state = np.ones(self.action_size)*self.mu
+
+    def noise(self):
+        self.state = (1 - self.theta)*self.state + self.sigma*np.random.randn(self.worker_size,self.action_size)
+        return self.state
