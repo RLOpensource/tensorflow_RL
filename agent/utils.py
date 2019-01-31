@@ -15,10 +15,8 @@ def get_gaes(rewards, dones, values, next_values, gamma, lamda, normalize):
 
 def get_rtgs_discount_rollout(rewards, dones, values, gamma):
     total_step = len(rewards)
-    next_rewards = np.zeros_like(rewards)
     targets = copy.deepcopy(rewards)
-    for i in range(total_step - 1):
-        next_rewards[i] = rewards[i+1]
+
     for i in reversed(range(total_step - 1)):
         targets[i] = rewards[i] + gamma * targets[i+1] * (1 - dones[i])
 
