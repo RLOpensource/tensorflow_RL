@@ -64,8 +64,7 @@ while True:
         total_reward = np.stack(total_reward)
 
         value, next_value = agent.get_value(total_state, total_next_state)
-        #adv, target = get_gaes(total_reward, total_done, value, next_value, agent.gamma, agent.lamda, normalize)
-        adv, target = get_rtgs(total_reward, total_done, value) # rtgs
+        adv, target = get_rtgs(total_reward, total_done, value, agent.gamma) # rtgs
 
         agent.train_model(total_state, total_action, np.hstack(target), np.hstack(adv))
         writer.add_scalar('data/reward_per_episode', sum(total_reward) / train_size, update_step)

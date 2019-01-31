@@ -24,8 +24,8 @@ sess = tf.Session()
 state_size, output_size = 8, 4
 actor = MLPActor('actor', state_size, output_size)
 critic = MLPCritic('critic', state_size)
-#agent = VPG(sess, output_size, num_worker, num_step, actor, critic)
-agent = A2C(sess, output_size, num_worker, num_step, actor, critic)
+agent = VPG(sess, output_size, num_worker, num_step, actor, critic)
+#agent = A2C(sess, output_size, num_worker, num_step, actor, critic)
 #agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 #saver = tf.train.Saver()
@@ -96,9 +96,10 @@ while True:
     for idx in range(num_worker):
         value, next_value = agent.get_value(total_state[idx * num_step:(idx + 1) * num_step],
                                             total_next_state[idx * num_step:(idx + 1) * num_step])
-        adv, target = get_gaes(total_reward[idx * num_step:(idx + 1) * num_step],
-                                    total_done[idx * num_step:(idx + 1) * num_step],
-                                    value, next_value, agent.gamma, agent.lamda, normalize)
+        # VPG
+        adv, target = get_rtgs(total_reward[idx * num_step:(idx + 1) * num_step], 
+                                            total_done[idx * num_step:(idx + 1) * num_step],
+                                            value, agent.gamma) # 
         total_target.append(target)
         total_adv.append(adv)
 
