@@ -27,6 +27,20 @@ def get_rtgs(rewards, dones, values): # get_rtgs for VPG
     advs = rtgs - values
     return advs, rtgs
 
+def get_rtgs_discount(rewards, dones, values, gamma): # get_rtgs for VPG
+    total_step = len(rewards)
+    rtgs = np.zeros_like(rewards)
+    done_prev = 0
+
+    for i in range(total_step):
+        if dones[i] == True:
+            for j in range(i, done_prev-1, -1):
+                rtgs[j] = rewards[j] + (gamma*rtgs[j+1] if j+1 <= i else 0)
+            done_prev = i+1
+
+    advs = rtgs - values
+    return advs, rtgs
+
 class OU_noise:
     def __init__(self,action_size,worker_size,mu=0,theta=0.05,sigma=0.2):
         self.action_size = action_size
