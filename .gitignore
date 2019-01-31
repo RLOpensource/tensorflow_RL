@@ -6,3 +6,4 @@ model/
 breakout/
 lunarlander/
 pendulum/
+.DS_Store
