@@ -6,7 +6,7 @@ from multiprocessing import Process, Pipe
 from agent.discrete.seperate.a2c import A2C
 from agent.discrete.seperate.ppo import PPO
 from agent.discrete.seperate.vpg import VPG
-from agent.utils import get_gaes, get_rtgs
+from agent.utils import get_gaes, get_rtgs_like_get_gaes
 from model import *
 
 num_worker = 16
@@ -97,7 +97,7 @@ while True:
         value, next_value = agent.get_value(total_state[idx * num_step:(idx + 1) * num_step],
                                             total_next_state[idx * num_step:(idx + 1) * num_step])
         # VPG
-        adv, target = get_rtgs(total_reward[idx * num_step:(idx + 1) * num_step], 
+        adv, target = get_rtgs_like_get_gaes(total_reward[idx * num_step:(idx + 1) * num_step], 
                                             total_done[idx * num_step:(idx + 1) * num_step],
                                             value, agent.gamma) # 
         total_target.append(target)
