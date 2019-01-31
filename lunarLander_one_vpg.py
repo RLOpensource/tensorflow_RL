@@ -6,7 +6,7 @@ from multiprocessing import Process, Pipe
 from agent.discrete.seperate.a2c import A2C
 from agent.discrete.seperate.ppo import PPO
 from agent.discrete.seperate.vpg import VPG
-from agent.utils import get_gaes, get_rtgs, get_rtgs_discount_rollout
+from agent.utils import get_gaes, get_rtgs, get_rtgs_discount_rollout, get_rtgs_like_get_gaes
 from model import *
 import gym
 
@@ -65,8 +65,10 @@ while True:
         total_reward = np.stack(total_reward)
 
         value, next_value = agent.get_value(total_state, total_next_state)
+        
         adv, target = get_rtgs(total_reward, total_done, value) # rtgs
         adv, target = get_rtgs_discount_rollout(total_reward, total_done, value, agent.gamma)
+        adv, target = get_rtgs_like_get_gaes(total_reward, total_done, value, agent.gamma) # rtgs
 
         agent.train_model(total_state, total_action, np.hstack(target), np.hstack(adv))
         writer.add_scalar('data/reward_per_episode', sum(total_reward) / train_size, update_step)

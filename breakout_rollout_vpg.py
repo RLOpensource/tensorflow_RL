@@ -6,7 +6,7 @@ import tensorflow as tf
 from agent.discrete.seperate.a2c import A2C
 from agent.discrete.seperate.ppo import PPO
 from agent.discrete.seperate.vpg import VPG
-from agent.utils import get_gaes, get_rtgs
+from agent.utils import get_gaes, get_rtgs_like_get_gaes
 from tensorboardX import SummaryWriter
 from model import *
 
@@ -17,8 +17,8 @@ num_step = 64
 window_size, output_size, obs_stack = 84, 3, 4
 actor = CNNActor('actor', window_size, obs_stack, output_size)
 critic = CNNCritic('critic', window_size, obs_stack)
-#agent = VPG(sess, output_size, num_worker, num_step, actor, critic)
-agent = A2C(sess, output_size, num_worker, num_step, actor, critic)
+agent = VPG(sess, output_size, num_worker, num_step, actor, critic)
+#agent = A2C(sess, output_size, num_worker, num_step, actor, critic)
 #agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
@@ -99,9 +99,10 @@ while True:
         for idx in range(num_worker):
             value, next_value = agent.get_value(total_state[idx * num_step:(idx + 1) * num_step],
                                                 total_next_state[idx * num_step:(idx + 1) * num_step])
-            adv, target = get_gaes(total_reward[idx * num_step:(idx + 1) * num_step],
+            #VPG
+            adv, target = get_rtgs_like_get_gaes(total_reward[idx * num_step:(idx + 1) * num_step],
                                         total_done[idx * num_step:(idx + 1) * num_step],
-                                        value, next_value, agent.gamma, agent.lamda, normalize)
+                                        value, agent.gamma) # rtgs
             total_target.append(target)
             total_adv.append(adv)
 

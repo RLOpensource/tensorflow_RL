@@ -13,6 +13,17 @@ def get_gaes(rewards, dones, values, next_values, gamma, lamda, normalize):
         gaes = (gaes - gaes.mean()) / (gaes.std() + 1e-30)
     return gaes, target
 
+def get_rtgs_like_get_gaes(rewards, dones, values, gamma): # get_rtgs for VPG
+    deltas = rewards
+    deltas = np.stack(deltas)
+    rtgs = copy.deepcopy(deltas)
+    
+    for t in reversed(range(len(deltas) - 1)):
+        rtgs[t] = rtgs[t] + (1 - dones[t]) * gamma * rtgs[t + 1]
+    
+    advs = rtgs - values        
+    return advs, rtgs
+
 def get_rtgs_discount_rollout(rewards, dones, values, gamma):
     total_step = len(rewards)
     targets = copy.deepcopy(rewards)
