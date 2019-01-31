@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from agent.discrete.seperate.a2c import A2C
 from agent.discrete.seperate.ppo import PPO
-from agent.utils import get_gaes
+from agent.discrete.seperate.vpg import VPG
+from agent.utils import get_gaes, get_rtgs_discount
 from tensorboardX import SummaryWriter
 from model import *
 import gym
@@ -17,7 +18,7 @@ num_step = 64
 window_size, output_size, obs_stack = 84, 3, 4
 actor = CNNActor('actor', window_size, obs_stack, output_size)
 critic = CNNCritic('critic', window_size, obs_stack)
-agent = A2C(sess, output_size, num_worker, num_step, actor, critic)
+agent = VPG(sess, output_size, num_worker, num_step, actor, critic)
 #agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
@@ -88,7 +89,7 @@ while True:
         total_reward = np.stack(total_reward)
 
         value, next_value = agent.get_value(total_state, total_next_state)
-        adv, target = get_gaes(total_reward, total_done, value, next_value, agent.gamma, agent.lamda, normalize)
+        adv, target = get_rtgs_discount(total_reward, total_done, value, agent.gamma) # rtgs
         
         agent.train_model(total_state, total_action, np.hstack(target), np.hstack(adv))
         writer.add_scalar('data/reward_per_episode', sum(total_reward) / train_size, update_step)
