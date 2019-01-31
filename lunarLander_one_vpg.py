@@ -6,7 +6,7 @@ from multiprocessing import Process, Pipe
 from agent.discrete.seperate.a2c import A2C
 from agent.discrete.seperate.ppo import PPO
 from agent.discrete.seperate.vpg import VPG
-from agent.utils import get_gaes, get_rtgs
+from agent.utils import get_gaes, get_rtgs, get_rtgs_discount_rollout
 from model import *
 import gym
 
@@ -31,9 +31,10 @@ saver = tf.train.Saver()
 
 normalize = True
 env = gym.make('LunarLander-v2')
-train_size = 16
+train_size = 1
 update_step = 0
 episode = 0
+agent.cof_entropy = 0.5
 total_state, total_next_state, total_reward, total_action, total_done = [], [], [], [], []
 
 while True:
@@ -64,8 +65,8 @@ while True:
         total_reward = np.stack(total_reward)
 
         value, next_value = agent.get_value(total_state, total_next_state)
-        #adv, target = get_gaes(total_reward, total_done, value, next_value, agent.gamma, agent.lamda, normalize)
         adv, target = get_rtgs(total_reward, total_done, value) # rtgs
+        adv, target = get_rtgs_discount_rollout(total_reward, total_done, value, agent.gamma)
 
         agent.train_model(total_state, total_action, np.hstack(target), np.hstack(adv))
         writer.add_scalar('data/reward_per_episode', sum(total_reward) / train_size, update_step)
