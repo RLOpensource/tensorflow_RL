@@ -13,16 +13,56 @@ def get_gaes(rewards, dones, values, next_values, gamma, lamda, normalize):
         gaes = (gaes - gaes.mean()) / (gaes.std() + 1e-30)
     return gaes, target
 
-def get_rtgs(rewards, dones, values, gamma): # get_rtgs for VPG
+def get_rtgs_like_get_gaes(rewards, dones, values, gamma): # get_rtgs for VPG
     deltas = rewards
     deltas = np.stack(deltas)
     rtgs = copy.deepcopy(deltas)
     
     for t in reversed(range(len(deltas) - 1)):
         rtgs[t] = rtgs[t] + (1 - dones[t]) * gamma * rtgs[t + 1]
+    
+    advs = rtgs - values        
+    return advs, rtgs
+
+def get_rtgs_discount_rollout(rewards, dones, values, gamma):
+    total_step = len(rewards)
+    targets = copy.deepcopy(rewards)
+
+    for i in reversed(range(total_step - 1)):
+        targets[i] = rewards[i] + gamma * targets[i+1] * (1 - dones[i])
+
+    adv = targets - values
+
+    return adv, targets
+    
+def get_rtgs(rewards, dones, values): # get_rtgs for VPG
+    total_step = len(rewards)
+    rtgs = np.zeros_like(rewards)
+    done_prev = 0
+    
+    for i in range(total_step):
+        if dones[i] == True:
+            for j in range(i, done_prev-1, -1):
+                rtgs[j] = rewards[j] + (rtgs[j+1] if j+1 <= i else 0)
+            done_prev = i+1
 
     advs = rtgs - values
     return advs, rtgs
+
+def get_rtgs_discount(rewards, dones, values, gamma): # get_rtgs for VPG
+    total_step = len(rewards)
+    rtgs = np.zeros_like(rewards)
+    done_prev = 0
+
+    for i in range(total_step):
+        if dones[i] == True:
+            for j in range(i, done_prev-1, -1):
+                rtgs[j] = rewards[j] + (gamma*rtgs[j+1] if j+1 <= i else 0)
+            done_prev = i+1
+
+    advs = rtgs - values
+    return advs, rtgs
+
 
 class OU_noise:
     def __init__(self,action_size,worker_size,mu=0,theta=0.05,sigma=0.2):
