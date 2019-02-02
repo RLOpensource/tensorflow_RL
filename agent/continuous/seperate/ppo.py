@@ -8,10 +8,11 @@ class PPO:
         self.state_size = state_size
         self.critic_lr = 0.0002
         self.actor_lr = 0.0001
-        self.epoch = 5
+        self.epoch = 3
         self.batch_size = 32
-        self.gamma = 0.9
-        self.lamda = 0.00
+        self.gamma = 0.99
+        self.lamda = 0.95
+        self.ppo_eps = 0.2
 
         self.actor = actor
         self.old_actor = old_actor
@@ -34,7 +35,7 @@ class PPO:
 
         ratio = self.pi.prob(self.action) / (self.old_pi.prob(self.action) + 1e-10)
         surr = ratio * adv
-        actor_loss = -tf.reduce_sum(tf.minimum(surr, tf.clip_by_value(ratio, 1-0.2, 1+2.0)*adv))
+        actor_loss = -tf.reduce_sum(tf.minimum(surr, tf.clip_by_value(ratio, 1-self.ppo_eps, 1+self.ppo_eps)*adv))
 
         critic_loss = tf.losses.mean_squared_error(self.value,self.targets)
 

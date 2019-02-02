@@ -39,16 +39,18 @@ class MLPDDPGContinuousCritic:
         return tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, self.scope)
 
 class MLPContinuousActor:
-    def __init__(self, name, state_size, output_size):
+    def __init__(self, name, state_size, output_size, clip):
         self.state_size = state_size
         self.output_size = output_size
+        self.clip = clip
 
         with tf.variable_scope(name):
             self.input = tf.placeholder(dtype=tf.float32, shape=[None, self.state_size])
-            self.l1 = tf.layers.dense(self.input, 64, tf.nn.relu, trainable=True)
-            self.l2 = tf.layers.dense(self.l1, 64, tf.nn.relu, trainable=True)
-            self.mu = 2 * tf.layers.dense(self.l2, self.output_size, tf.nn.tanh, trainable=True)
-            self.sigma = tf.layers.dense(self.l2, self.output_size, tf.nn.softplus, trainable=True)
+            self.l1 = tf.layers.dense(self.input, 64, tf.nn.leaky_relu, trainable=True)
+            self.l2 = tf.layers.dense(self.l1, 64, tf.nn.leaky_relu, trainable=True)
+            self.l3 = tf.layers.dense(self.l2, 64, tf.nn.leaky_relu, trainable=True)
+            self.mu = self.clip * tf.layers.dense(self.l3, self.output_size, tf.nn.tanh, trainable=True)
+            self.sigma = tf.layers.dense(self.l3, self.output_size, tf.nn.softplus, trainable=True)
 
             self.actor = tf.distributions.Normal(loc=self.mu, scale=self.sigma)
         
@@ -66,9 +68,10 @@ class MLPContinuousCritic:
 
         with tf.variable_scope(name):
             self.input = tf.placeholder(dtype=tf.float32, shape=[None, self.state_size])
-            self.l1 = tf.layers.dense(self.input, 64, tf.nn.relu, trainable=True)
-            self.l2 = tf.layers.dense(self.l1, 64, tf.nn.relu, trainable=True)
-            self.critic = tf.layers.dense(self.l2, 1)
+            self.l1 = tf.layers.dense(self.input, 64, tf.nn.leaky_relu, trainable=True)
+            self.l2 = tf.layers.dense(self.l1, 64, tf.nn.leaky_relu, trainable=True)
+            self.l3 = tf.layers.dense(self.l2, 64, tf.nn.leaky_relu, trainable=True)
+            self.critic = tf.layers.dense(self.l3, 1)
 
             self.scope = tf.get_variable_scope().name
 
