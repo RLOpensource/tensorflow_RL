@@ -47,3 +47,11 @@ Please 'just' use these code and just 'refer' the url of repository in any form.
 ## Support us in any form. Thank you
 
 Content us to [chagmgang@gmail.com](chagmgang@gmail.com)
+
+## Todo List
+
+- [ ] Continuous action Experiment in Lunarlander continuous environment
+- [ ] Packaging work
+- [ ] Sample Efficient Actor-Critic with Experience Replay
+- [ ] Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor
+- [ ] LSTM version agent
