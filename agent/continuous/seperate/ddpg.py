@@ -79,9 +79,9 @@ class DDPG:
         })
         self.sess.run(self.update_target_soft)
 
-    def get_action(self, state, clip,epsilon):
+    def get_action(self, state, epsilon):
         action = self.sess.run(self.actor.actor,feed_dict={self.actor.state:state})
-        return np.clip(action + epsilon*self.noise_generator.noise(),-clip,clip)
+        return np.clip(action + epsilon*self.noise_generator.noise(), -1, 1)
 
     def get_sample(self,state,action,reward,next_state,done):
         self.memory.append((state,action,reward,next_state,done))
