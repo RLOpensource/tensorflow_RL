@@ -12,6 +12,45 @@ What you have to do to research with this Repository is 'just make your own mode
 
 ## Result
 
+### 1. Continuous Action BipedalWalker  
+
+* Script : bipedalwalker_ppo.py, bipedalwalker_ddpg.py  
+* Environment : BipedalWalker-v2 
+* Orange : ppo, Blue: ddpg
+* Episode : 2165
+* Image : PPO
+
+###### BipedalWalker
+<div align="center">
+  <img src="sources/bipedalwalker_ppo.gif" width="50%" height='300'><img src="sources/bipedalwalker.png" width="50%" height='300'>
+</div>
+
+### 2. Continuous Action Pendulum
+
+* Script : pendulum_ppo.py, pendulum_ddpg.py  
+* Environment : Pendulum-v0
+* Orange : ddpg, Blue: ppo
+* Episode : 300
+* Image : PPO
+
+###### Pendulum
+<div align="center">
+  <img src="sources/pendulum.gif" width="50%" height='300'><img src="sources/pendulum.png" width="50%" height='300'>
+</div>
+
+### 3. Discrete Action CNN Breakout
+
+* Script : breakout_rollout_a2c.py, breakout_rollout_ppo.py, breakout_rollout_vpg.py
+* Environment : BreakoutDeterministic-v4 with Multi-processing
+* Orange : a2c, Blue : ppo, Red : vpg
+* Episode : 600
+* Image : PPO
+
+###### Breakout
+<div align="center">
+  <img src="sources/breakout.gif" width="30%" height='300'><img src="sources/breakout.png" width="50%" height='300'>
+</div>
+
 ## Member
 
 - [https://github.com/chagmgang](https://github.com/chagmgang)

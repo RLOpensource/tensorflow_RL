@@ -7,3 +7,10 @@ breakout/
 lunarlander/
 pendulum/
 .DS_Store
+bipedalwalker_ppo/
+bipedalwalker_ddpg/
+pendulum_ddpg/
+pendulum_ppo/
+breakout_a2c/
+breakout_ppo/
+breakout_vpg/

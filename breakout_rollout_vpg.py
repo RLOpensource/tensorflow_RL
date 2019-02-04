@@ -18,11 +18,9 @@ window_size, output_size, obs_stack = 84, 3, 4
 actor = CNNActor('actor', window_size, obs_stack, output_size)
 critic = CNNCritic('critic', window_size, obs_stack)
 agent = VPG(sess, output_size, num_worker, num_step, actor, critic)
-#agent = A2C(sess, output_size, num_worker, num_step, actor, critic)
-#agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
-#saver.restore(sess, 'breakout/model')
+#saver.restore(sess, 'breakout_vpg/model')
 learning = True
 
 normalize = True
@@ -84,8 +82,9 @@ while True:
 
         if real_dones[sample_idx]:
             episode += 1
-            print(episode, score)
-            writer.add_scalar('data/reward_per_episode', score, episode)
+            if episode < 3000:
+                print(episode, score)
+                writer.add_scalar('data/reward_per_episode', score, episode)
             score = 0
 
     if learning:
@@ -110,4 +109,4 @@ while True:
         agent.train_model(total_state, total_action, np.hstack(total_target), np.hstack(total_adv))
 
         writer.add_scalar('data/reward_per_rollout', sum(total_reward)/(num_worker), global_update)
-        saver.save(sess, 'breakout/model')
+        saver.save(sess, 'breakout_vpg/model')

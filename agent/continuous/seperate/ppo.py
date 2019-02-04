@@ -61,9 +61,10 @@ class PPO:
                     self.action: action_batch}
                 self.sess.run([self.atrain_op, self.ctrain_op], feed_dict=feed_dict)
 
-    def get_action(self, state, clip):
+    def get_action(self, state):
         action = self.sess.run(self.sample_op, feed_dict={self.actor.input: state})
-        return np.clip(action, -clip, clip)
+        action = 2 * action
+        return np.clip(action, -1, 1)
 
     def get_value(self, state, next_state):
         value = self.sess.run(self.value, feed_dict={self.critic.input: state})
