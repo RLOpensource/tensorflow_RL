@@ -6,7 +6,6 @@ model/
 breakout/
 lunarlander/
 pendulum/
-.DS_Store
 bipedalwalker_ppo/
 bipedalwalker_ddpg/
 pendulum_ddpg/
