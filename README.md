@@ -1,14 +1,38 @@
 # This Repository is Reinforcement Learning Agent FramWork
 
-We provide the example source code to implement the Reinforcement Learning(Vanilla PG, A2C, PPO, DDPG) using this framework.
+This repository is designed to provide an easy deeo reinforcement learning framework for those studying deep reinforcement learning.
 
-The example source code is done in the representative image and vector state environment provided by openai gym.
+This framework is based on a tensor flow, and you can use it if you want to import the model you want into model.py.
 
-This Repository include Vanilla PG, A2C, PPO based on Parallel Advantage Actor Critic.
+We provide a tutorial to train the agent for the environment, and tutorials by action and input shape are provided as follows.
 
-However! Just use PPO in discrete action space. Just use DDPG in continuous action space!
+```
+Continuous Action MLP - bipedalwalker, pendulum
+Discrete Action MLP - LunarLander
+Discrete Action CNN - Breakout
+```
 
-What you have to do to research with this Repository is 'just make your own model' with approprepate input, output variable such as input, actor, critic.
+Our tutorial is being done in the gym environment provided by openai and you need to install the openai gym and box2d to run the tutorial code.
+
+## Requirements
+
+```
+tensorflow
+box2d
+gym
+numpy
+tensorboardX
+```
+
+## Implemented
+
+- [x] Vanilla Policy Gradient
+- [x] Advantage Actor Critic
+- [x] Proximal Policy Optimization
+- [x] Deep Deterministic Policy Gradient
+- [ ] Trust Region Policy Optimization
+- [ ] Actor Critic Experience Replay
+- [ ] Soft Actor Critic
 
 ## Demonstration
 
@@ -95,16 +119,8 @@ Please 'just' use these code and just 'refer' the url of repository in any form.
 
 [7] [Vanilla Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/vpg.html)
 
-## Please fork this repository and contribute to strengthen the tensorflow reinforcement learning ecosystem
+### Please fork this repository and contribute to strengthen the tensorflow reinforcement learning ecosystem
 
-## Support us in any form. Thank you
+### Support us in any form. Thank you
 
 Content us to [chagmgang@gmail.com](chagmgang@gmail.com)
-
-## Todo List
-
-- [ ] Continuous action Experiment in Lunarlander continuous environment
-- [ ] Packaging work
-- [ ] Sample Efficient Actor-Critic with Experience Replay
-- [ ] Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor
-- [ ] LSTM version agent
