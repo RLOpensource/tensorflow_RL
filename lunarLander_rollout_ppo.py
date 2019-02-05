@@ -6,12 +6,12 @@ from multiprocessing import Process, Pipe
 from agent.discrete.seperate.a2c import A2C
 from agent.discrete.seperate.ppo import PPO
 from agent.discrete.seperate.vpg import VPG
-from agent.utils import get_gaes, get_rtgs_like_get_gaes
+from agent.utils import get_gaes, get_rtgs
 from model import *
 
 num_worker = 16
 num_step = 128
-visualize = False
+visualize = True
 global_update = 0
 sample_idx = 0
 step = 0
@@ -24,10 +24,10 @@ sess = tf.Session()
 state_size, output_size = 8, 4
 actor = MLPActor('actor', state_size, output_size)
 critic = MLPCritic('critic', state_size)
-agent = VPG(sess, output_size, num_worker, num_step, actor, critic)
+agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
-#saver.restore(sess, 'lunarlander_vpg/model')
+#saver.restore(sess, 'lunarlander_ppo/model')
 
 agent.lamda = 0.95
 agent.epoch = 3
@@ -53,7 +53,6 @@ while True:
     for _ in range(num_step):
         step += 1
         actions = agent.get_action(states)
-        #print(actions)
         for parent_conn, action in zip(parent_conns, actions):
             parent_conn.send(action)
 
@@ -78,8 +77,9 @@ while True:
         
         if dones[sample_idx]:
             episode += 1
-            writer.add_scalar('data/reward_per_episode', score, episode)
-            print(episode, score)
+            if episode < 350:
+                writer.add_scalar('data/reward_per_episode', score, episode)
+                print(episode, score)
             score = 0
 
         states = next_states
@@ -94,14 +94,13 @@ while True:
     for idx in range(num_worker):
         value, next_value = agent.get_value(total_state[idx * num_step:(idx + 1) * num_step],
                                             total_next_state[idx * num_step:(idx + 1) * num_step])
-        # VPG
-        adv, target = get_rtgs_like_get_gaes(total_reward[idx * num_step:(idx + 1) * num_step], 
-                                            total_done[idx * num_step:(idx + 1) * num_step],
-                                            value, agent.gamma) # 
+        adv, target = get_gaes(total_reward[idx * num_step:(idx + 1) * num_step],
+                                    total_done[idx * num_step:(idx + 1) * num_step],
+                                    value, next_value, agent.gamma, agent.lamda, normalize)
         total_target.append(target)
         total_adv.append(adv)
 
     agent.train_model(total_state, total_action, np.hstack(total_target), np.hstack(total_adv))
 
     writer.add_scalar('data/reward_per_rollout', sum(total_reward)/(num_worker), global_update)
-    saver.save(sess, 'lunarlander_vpg/model')
+    saver.save(sess, 'lunarlander_ppo/model')

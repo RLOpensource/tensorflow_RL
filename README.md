@@ -10,7 +10,7 @@ However! Just use PPO in discrete action space. Just use DDPG in continuous acti
 
 What you have to do to research with this Repository is 'just make your own model' with approprepate input, output variable such as input, actor, critic.
 
-## Result
+## Demonstration
 
 ### 1. Continuous Action BipedalWalker  
 
@@ -50,6 +50,20 @@ What you have to do to research with this Repository is 'just make your own mode
 <div align="center">
   <img src="sources/breakout.gif" width="30%" height='300'><img src="sources/breakout.png" width="50%" height='300'>
 </div>
+
+### 4. Discrete Action MLP LunarLander
+
+* Script : lunarLander_rollout_a2c.py, lunarLander_rollout_ppo.py, lunarLander_rollout_vpg.py
+* Environment : LunarLander-v2 with Multi-processing
+* Orange : a2c, Blue : ppo, Red : vpg
+* Episode : 350
+* Image : PPO
+
+###### LunarLander
+<div align="center">
+  <img src="sources/lunarlander.gif" width="50%" height='300'><img src="sources/lunarlander.png" width="50%" height='300'>
+</div>
+
 
 ## Member
 
