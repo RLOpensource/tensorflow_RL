@@ -16,3 +16,4 @@ breakout_vpg/
 lunarlander_ppo/
 lunarlander_vpg/
 lunarlander_a2c/
+.DS_Store
