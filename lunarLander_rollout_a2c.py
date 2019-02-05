@@ -24,12 +24,10 @@ sess = tf.Session()
 state_size, output_size = 8, 4
 actor = MLPActor('actor', state_size, output_size)
 critic = MLPCritic('critic', state_size)
-#agent = VPG(sess, output_size, num_worker, num_step, actor, critic)
 agent = A2C(sess, output_size, num_worker, num_step, actor, critic)
-#agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
-#saver = tf.train.Saver()
-#saver.restore(sess, 'breakout/model')
+saver = tf.train.Saver()
+#saver.restore(sess, 'lunarlander_a2c/model')
 
 agent.lamda = 0.95
 agent.epoch = 3
@@ -55,7 +53,7 @@ while True:
     for _ in range(num_step):
         step += 1
         actions = agent.get_action(states)
-        #print(actions)
+
         for parent_conn, action in zip(parent_conns, actions):
             parent_conn.send(action)
 
@@ -80,8 +78,9 @@ while True:
         
         if dones[sample_idx]:
             episode += 1
-            writer.add_scalar('data/reward_per_episode', score, episode)
-            print(episode, score)
+            if episode < 350:
+                writer.add_scalar('data/reward_per_episode', score, episode)
+                print(episode, score)
             score = 0
 
         states = next_states
@@ -105,4 +104,4 @@ while True:
     agent.train_model(total_state, total_action, np.hstack(total_target), np.hstack(total_adv))
 
     writer.add_scalar('data/reward_per_rollout', sum(total_reward)/(num_worker), global_update)
-    #saver.save(sess, 'breakout/model')
+    saver.save(sess, 'lunarlander_a2c/model')

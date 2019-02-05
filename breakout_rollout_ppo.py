@@ -87,7 +87,6 @@ while True:
                 writer.add_scalar('data/reward_per_episode', score, episode)
             score = 0
 
-    '''
     if learning:
         total_state = np.stack(total_state).transpose([1, 0, 2, 3, 4]).reshape([-1, window_size, window_size, obs_stack])
         total_next_state = np.stack(total_next_state).transpose([1, 0, 2, 3, 4]).reshape([-1, window_size, window_size, obs_stack])
@@ -110,4 +109,3 @@ while True:
 
         writer.add_scalar('data/reward_per_rollout', sum(total_reward)/(num_worker), global_update)
         saver.save(sess, 'breakout_ppo/model')
-    '''
