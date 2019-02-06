@@ -1,8 +1,8 @@
-# This Repository is Reinforcement Learning Agent FramWork
+# This Repository is Reinforcement Learning Agent FrameWork
 
-This repository is designed to provide an easy deeo reinforcement learning framework for those studying deep reinforcement learning.
+This repository is designed to provide an easy demo reinforcement learning framework for those studying deep reinforcement learning.
 
-This framework is based on a tensor flow, and you can use it if you want to import the model you want into model.py.
+This framework is based on a tensorflow, and you can use it if you want to import the model you want into model.py.
 
 We provide a tutorial to train the agent for the environment, and tutorials by action and input shape are provided as follows.
 
