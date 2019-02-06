@@ -17,3 +17,5 @@ lunarlander_ppo/
 lunarlander_vpg/
 lunarlander_a2c/
 .DS_Store
+dist/
+tensorflow_rl.egg-info/

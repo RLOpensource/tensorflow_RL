@@ -14,6 +14,19 @@ Discrete Action CNN - Breakout
 
 Our tutorial is being done in the gym environment provided by openai and you need to install the openai gym and box2d to run the tutorial code.
 
+## Installation
+
+cpu version
+
+```
+pip install tensorflow-rl[tf-cpu]
+```
+
+gpu version
+```
+pip install tensorflow-rl[tf-gpu]
+```
+
 ## Requirements
 
 ```
