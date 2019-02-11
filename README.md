@@ -6,10 +6,21 @@ This framework is based on a tensorflow, and you can use it if you want to impor
 
 We provide a tutorial to train the agent for the environment, and tutorials by action and input shape are provided as follows.
 
+
+Environment
+
 ```
 Continuous Action MLP - bipedalwalker, pendulum
 Discrete Action MLP - LunarLander
 Discrete Action CNN - Breakout
+```
+
+Algorithms
+
+```
+Continuous Action MLP - DDPG, TRPO, PPO
+Discrete Action MLP - Vanilla PG, A2C, PPO
+Discrete Action CNN - Vanilla PG, A2C, PPO
 ```
 
 Our tutorial is being done in the gym environment provided by openai and you need to install the openai gym and box2d to run the tutorial code.
@@ -27,6 +38,14 @@ gpu version
 pip install tensorflow-rl[tf-gpu]
 ```
 
+If you install this repository by onle
+
+```
+pip install tensorflow-rl
+```
+
+tensorflow is not installed
+
 ## Requirements
 
 ```
@@ -43,9 +62,9 @@ tensorboardX
 - [x] Advantage Actor Critic
 - [x] Proximal Policy Optimization
 - [x] Deep Deterministic Policy Gradient
-- [ ] Trust Region Policy Optimization
 - [ ] Actor Critic Experience Replay
 - [ ] Soft Actor Critic
+- [ ] LSTM
 
 ## Demonstration
 
@@ -131,6 +150,8 @@ Please 'just' use these code and just 'refer' the url of repository in any form.
 [6] [Continuous Control With Deep Reinforcement Learning](https://arxiv.org/pdf/1509.02971.pdf)
 
 [7] [Vanilla Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/vpg.html)
+
+[8] [Deep Recurrent Q-Learning for Partially Observable MDPs](https://arxiv.org/pdf/1507.06527.pdf)
 
 ### Please fork this repository and contribute to strengthen the tensorflow reinforcement learning ecosystem
 
