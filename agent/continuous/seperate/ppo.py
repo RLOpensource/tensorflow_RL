@@ -23,7 +23,7 @@ class PPO:
         self.old_pi = self.old_actor.actor
         self.pi_params = self.actor.get_trainable_variables()
         self.old_pi_params = self.old_actor.get_trainable_variables()
-        self.ciritic_params = self.critic.get_trainable_variables()
+        self.critic_params = self.critic.get_trainable_variables()
 
         self.sample_op = tf.squeeze(self.pi.sample(1), axis=0)
         self.update_oldpi_op = [oldp.assign(p) for p, oldp in zip(self.pi_params, self.old_pi_params)]
@@ -63,7 +63,6 @@ class PPO:
 
     def get_action(self, state):
         action = self.sess.run(self.sample_op, feed_dict={self.actor.input: state})
-        action = 2 * action
         return np.clip(action, -1, 1)
 
     def get_value(self, state, next_state):
