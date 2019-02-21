@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 import random
 from collections import deque
-from policy.utils import OU_noise
+from agent.utils import OU_noise
 
 class DDPG:
     def __init__(self, sess, state_size, action_size, num_worker, num_step, target_actor, target_critic, actor, critic):
