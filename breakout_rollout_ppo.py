@@ -3,17 +3,15 @@ from multiprocessing import Pipe
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from agent.discrete.seperate.a2c import A2C
-from agent.discrete.seperate.ppo import PPO
-from agent.discrete.seperate.vpg import VPG
-from agent.utils import get_gaes, get_rtgs
+from policy.discrete.seperate.ppo import PPO
+from policy.utils import get_gaes, get_rtgs
 from tensorboardX import SummaryWriter
 from model import *
 
 writer = SummaryWriter()
 sess = tf.Session()
 num_worker = 8
-num_step = 64
+num_step = 256
 window_size, output_size, obs_stack = 84, 3, 4
 actor = CNNActor('actor', window_size, obs_stack, output_size)
 critic = CNNCritic('critic', window_size, obs_stack)

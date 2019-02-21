@@ -3,10 +3,8 @@ import tensorflow as tf
 from tensorboardX import SummaryWriter
 from lunarLander_environment import Environment
 from multiprocessing import Process, Pipe
-from agent.discrete.seperate.a2c import A2C
-from agent.discrete.seperate.ppo import PPO
-from agent.discrete.seperate.vpg import VPG
-from agent.utils import get_gaes, get_rtgs
+from policy.discrete.seperate.a2c import A2C
+from policy.utils import get_gaes, get_rtgs
 from model import *
 
 num_worker = 16
