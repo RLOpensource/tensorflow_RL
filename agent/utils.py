@@ -1,5 +1,36 @@
 import numpy as np
 import copy
+import collections
+
+class Memory:
+    def __init__(self, max_length, prioritized):
+        self.max_length = max_length
+        self.prioritized = prioritized
+        self.state_memory = collections.deque(maxlen=self.max_length)
+        self.action_memory = collections.deque(maxlen=self.max_length)
+        self.next_state_memory = collections.deque(maxlen=self.max_length)
+        self.reward_memory = collections.deque(maxlen=self.max_length)
+        self.done_memory = collections.deque(maxlen=self.max_length)
+
+    def append(self, state, action, next_state, reward, done):
+        self.state_memory.append(state)
+        self.action_memory.append(action)
+        self.next_state_memory.append(next_state)
+        self.reward_memory.append(reward)
+        self.done_memory.append(done)
+
+    def sample(self, sample_number):
+        if not self.prioritized:
+            length = len(self.state_memory)
+            sample_idx = np.random.randint(sample_number, size=length)
+            s = [self.state_memory[i] for i in sample_idx]
+            n_s = [self.next_state_memory[i] for i in sample_idx]
+            r = [self.reward_memory[i] for i in sample_idx]
+            a = [self.action_memory[i] for i in sample_idx]
+            d = [self.done_memory[i] for i in sample_idx]
+            
+            return s, a, n_s, r, d
+
 
 def split_episode(data, done):
     total_data_list = []
