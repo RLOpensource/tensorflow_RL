@@ -38,7 +38,7 @@ gpu version
 pip install tensorflow-rl[tf-gpu]
 ```
 
-If you install this repository by onle
+If you install this repository by only
 
 ```
 pip install tensorflow-rl
@@ -64,7 +64,8 @@ tensorboardX
 - [x] Deep Deterministic Policy Gradient
 - [ ] Actor Critic Experience Replay
 - [ ] Soft Actor Critic
-- [ ] LSTM
+- [ ] LSTM train Algorithm
+- [ ] Value based Reinforcement Learning
 
 ## Demonstration
 
