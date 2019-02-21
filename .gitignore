@@ -23,3 +23,4 @@ break_out_ppolstm/
 breakout_ppo_1stack/
 breakout_ppo_1env1stack/
 breakout_ppo_1env1lstm/
+build/
