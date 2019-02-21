@@ -1,7 +1,7 @@
 import gym
-from agent.continuous.seperate.ppo import PPO
-from agent.continuous.seperate.ddpg import DDPG
-from agent import utils
+from policy.continuous.seperate.ppo import PPO
+from policy.continuous.seperate.ddpg import DDPG
+from policy import utils
 import tensorflow as tf
 import numpy as np
 from tensorboardX import SummaryWriter

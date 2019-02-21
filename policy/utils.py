@@ -1,6 +1,18 @@
 import numpy as np
 import copy
 
+def split_episode(data, done):
+    total_data_list = []
+    data_list = []
+    for i, j in zip(data, done):
+        if not j:
+            data_list.append(i)
+        else:
+            data_list.append(i)
+            total_data_list.append(data_list)
+            data_list = []
+    return total_data_list
+
 def get_gaes(rewards, dones, values, next_values, gamma, lamda, normalize):
     deltas = [r + gamma * (1 - d) * nv - v for r, d, nv, v in zip(rewards, dones, next_values, values)]
     deltas = np.stack(deltas)
