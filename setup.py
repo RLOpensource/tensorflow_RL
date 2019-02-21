@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='tensorflow_rl',
-    version='0.1.16',
+    version='0.1.17',
     author='ChaKeumgang',
     author_email='chagmgang@gmail.com',
     description='tensorflow-rl: Modular Deep Reinforcement Learning Framework.',

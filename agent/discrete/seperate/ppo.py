@@ -157,7 +157,6 @@ class PPO:
 
     def get_action(self, state):
         action = self.sess.run(self.actor.actor, feed_dict={self.actor.input: state})
-        print(action)
         action = [np.random.choice(self.output_size, p=i) for i in action]
         return np.stack(action)
 
