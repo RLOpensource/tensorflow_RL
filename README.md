@@ -26,6 +26,11 @@ Discrete Action CNN - Vanilla PG, A2C, PPO
 Our tutorial is being done in the gym environment provided by openai and you need to install the openai gym and box2d to run the tutorial code.
 
 ## Installation
+from git repository
+```
+https://github.com/RLOpensource/tensorflow_RL
+pip install .
+```
 
 cpu version
 
