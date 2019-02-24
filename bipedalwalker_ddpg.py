@@ -1,7 +1,7 @@
 import gym
-from policy.continuous.seperate.ppo import PPO
-from policy.continuous.seperate.ddpg import DDPG
-from policy import utils
+from agent.continuous.seperate.ppo import PPO
+from agent.continuous.seperate.ddpg import DDPG
+from agent import utils
 import tensorflow as tf
 import numpy as np
 from tensorboardX import SummaryWriter
@@ -28,14 +28,17 @@ saver = tf.train.Saver()
 ep = 0
 clip = 1.0
 epsilon = 1.0
-
+scores = []
+update_step = 0
 while True:
     ep += 1
     state = env.reset()
     done = False
-    total_state, total_reward, total_done, total_next_state, total_action = [], [], [], [], []
     score = 0
     while not done:
+
+        #if ep % 10 == 0:
+        #    env.render()
         #env.render()
         action = agent.get_action([state], epsilon)
 
@@ -47,13 +50,17 @@ while True:
         agent.get_sample(state,action,reward,next_state,done)
 
         state = next_state
-        if len(agent.memory) >= 1000:
+        if len(agent.memory) >= 10000:
             agent.train_model()
 
+    scores.append(score)
     agent.noise_generator.reset()
-    if len(agent.memory) >= 1000:
+    if len(agent.memory) >= 10000 and epsilon >= 0.01:
         epsilon *= 0.995
-    if ep < 2165:
-        print(ep, score, epsilon)
-        writer.add_scalar('data/reward', score, ep)
+        epsilon -= 0.000001
+    if ep % 10 == 0:
+        update_step += 1
+        print(update_step, np.mean(scores), epsilon)
+        writer.add_scalar('data/reward', score, update_step)
         saver.save(sess, 'bipedalwalker_ddpg/model')
+        scores = []

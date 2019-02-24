@@ -3,8 +3,8 @@ from multiprocessing import Pipe
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from policy.discrete.seperate.vpg import VPG
-from policy.utils import get_gaes, get_rtgs_like_get_gaes
+from agent.discrete.seperate.vpg import VPG
+from agent.utils import get_gaes, get_rtgs_like_get_gaes
 from tensorboardX import SummaryWriter
 from model import *
 

@@ -1,6 +1,6 @@
 import gym
-from policy.continuous.seperate.ppo import PPO
-from policy import utils
+from agent.continuous.seperate.ppo import PPO
+from agent import utils
 import tensorflow as tf
 import numpy as np
 from tensorboardX import SummaryWriter

@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from policy.discrete.seperate.ppo import PPOLSTM
-from policy.utils import get_gaes, split_episode
+from agent.discrete.seperate.ppo import PPOLSTM
+from agent.utils import get_gaes, split_episode
 from tensorboardX import SummaryWriter
 from model import CNNActorLSTM, CNNCriticLSTM
 import cv2

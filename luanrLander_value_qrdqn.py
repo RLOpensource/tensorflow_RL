@@ -45,7 +45,7 @@ while True:
         agent.append(state, next_state, action, reward, done)
         state = next_state
         if done:
-            if episode < 300:
+            if episode < 467:
                 writer.add_scalar('data/reward', score, episode)
                 writer.add_scalar('data/loss', l, episode)
                 writer.add_scalar('data/epsilon', e, episode)

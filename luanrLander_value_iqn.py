@@ -15,6 +15,7 @@ agent = IQN(sess, output_size, mainNet, targetNet, batch_size)
 sess.run(tf.global_variables_initializer())
 agent.update_target()
 saver = tf.train.Saver()
+saver.restore(sess, model_path)
 
 env = gym.make('LunarLander-v2')
 episode = 0
@@ -28,10 +29,14 @@ while True:
     score = 0
     while not done:
         global_step += 1
+        '''
         if np.random.rand() < e:
             action = np.random.randint(0, output_size, 1)
         else:
             action = agent.get_action(state)
+        '''
+        env.render()
+        action = agent.get_action(state)
         action = action[0]
 
         next_state, reward, done, _ = env.step(action)
@@ -45,7 +50,7 @@ while True:
         agent.append(state, next_state, action, reward, done)
         state = next_state
         if done:
-            if episode < 300:
+            if episode < 467:
                 writer.add_scalar('data/reward', score, episode)
                 writer.add_scalar('data/loss', l, episode)
                 writer.add_scalar('data/epsilon', e, episode)

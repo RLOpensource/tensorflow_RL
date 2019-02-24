@@ -108,7 +108,7 @@ def get_rtgs_discount(rewards, dones, values, gamma): # get_rtgs for VPG
 
 
 class OU_noise:
-    def __init__(self,action_size,worker_size,mu=0,theta=0.05,sigma=0.2):
+    def __init__(self,action_size,worker_size,mu=0,theta=0.1,sigma=0.2):
         self.action_size = action_size
         self.worker_size = worker_size
         self.mu = mu
@@ -117,8 +117,10 @@ class OU_noise:
         self.reset()
 
     def reset(self):
-        self.state = np.ones(self.action_size)*self.mu
+        self.X = np.ones(self.action_size) * self.mu
 
-    def noise(self):
-        self.state = (1 - self.theta)*self.state + self.sigma*np.random.randn(self.worker_size,self.action_size)
-        return self.state
+    def sample(self):
+        dx = self.theta * (self.mu - self.X)
+        dx = dx + self.sigma * np.random.randn(len(self.X))
+        self.X = self.X + dx
+        return self.X
