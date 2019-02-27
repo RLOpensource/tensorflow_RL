@@ -4,9 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from agent.discrete.seperate.ppo import PPO
+from example_model.policy.cnn.discrete import CNNActor
+from example_model.policy.cnn.discrete import CNNCritic
 from agent.utils import get_gaes, get_rtgs
 from tensorboardX import SummaryWriter
-from model import *
 
 writer = SummaryWriter()
 sess = tf.Session()

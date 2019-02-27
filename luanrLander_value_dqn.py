@@ -1,4 +1,4 @@
-from model import MLPDQN
+from example_model.value.mlp.discrete import MLPDQN
 from agent.discrete.join.dqn import DQN
 import tensorflow as tf
 import numpy as np
@@ -45,7 +45,7 @@ while True:
         agent.append(state, next_state, action, reward, done)
         state = next_state
         if done:
-            if episode < 3000:
+            if episode < 467:
                 writer.add_scalar('data/reward', score, episode)
                 writer.add_scalar('data/loss', l, episode)
                 writer.add_scalar('data/epsilon', e, episode)

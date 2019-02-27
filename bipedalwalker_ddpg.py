@@ -2,13 +2,11 @@ import gym
 from agent.continuous.seperate.ppo import PPO
 from agent.continuous.seperate.ddpg import DDPG
 from agent import utils
+from example_model.policy.mlp.continuous import MLPDDPGContinuousActor
+from example_model.policy.mlp.continuous import MLPDDPGContinuousCritic
 import tensorflow as tf
 import numpy as np
 from tensorboardX import SummaryWriter
-from model import MLPContinuousActor
-from model import MLPContinuousCritic
-from model import MLPDDPGContinuousActor
-from model import MLPDDPGContinuousCritic
 
 writer = SummaryWriter()
 
@@ -56,7 +54,7 @@ while True:
     scores.append(score)
     agent.noise_generator.reset()
     if len(agent.memory) >= 10000 and epsilon >= 0.01:
-        epsilon *= 0.995
+        epsilon *= 0.999
         epsilon -= 0.000001
     if ep % 10 == 0:
         update_step += 1

@@ -1,13 +1,11 @@
 import gym
 from agent.continuous.seperate.ddpg import DDPG
+from example_model.policy.mlp.continuous import MLPDDPGContinuousActor
+from example_model.policy.mlp.continuous import MLPDDPGContinuousCritic
 from agent import utils
 import tensorflow as tf
 import numpy as np
 from tensorboardX import SummaryWriter
-from model import MLPContinuousActor
-from model import MLPContinuousCritic
-from model import MLPDDPGContinuousActor
-from model import MLPDDPGContinuousCritic
 
 writer = SummaryWriter()
 
