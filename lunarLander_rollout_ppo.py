@@ -4,8 +4,9 @@ from tensorboardX import SummaryWriter
 from lunarLander_environment import Environment
 from multiprocessing import Process, Pipe
 from agent.discrete.seperate.ppo import PPO
+from example_model.policy.mlp.discrete import MLPActor
+from example_model.policy.mlp.discrete import MLPCritic
 from agent.utils import get_gaes, get_rtgs
-from model import *
 
 num_worker = 16
 num_step = 128

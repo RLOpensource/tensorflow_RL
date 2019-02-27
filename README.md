@@ -19,8 +19,8 @@ Algorithms
 
 ```
 Continuous Action MLP - DDPG, TRPO, PPO
-Discrete Action MLP - Vanilla PG, A2C, PPO
-Discrete Action CNN - Vanilla PG, A2C, PPO
+Discrete Action MLP - Vanilla PG, A2C, PPO, DQN, QRDQN, IQN
+Discrete Action CNN - Vanilla PG, A2C, PPO, DQN, QRDQN, IQN
 ```
 
 Our tutorial is being done in the gym environment provided by openai and you need to install the openai gym and box2d to run the tutorial code.
@@ -67,10 +67,10 @@ tensorboardX
 - [x] Advantage Actor Critic
 - [x] Proximal Policy Optimization
 - [x] Deep Deterministic Policy Gradient
+- [x] Value based Reinforcement Learning
 - [ ] Actor Critic Experience Replay
 - [ ] Soft Actor Critic
 - [ ] LSTM train Algorithm
-- [ ] Value based Reinforcement Learning
 
 ## Demonstration
 
@@ -158,6 +158,13 @@ Please 'just' use these code and just 'refer' the url of repository in any form.
 [7] [Vanilla Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/vpg.html)
 
 [8] [Deep Recurrent Q-Learning for Partially Observable MDPs](https://arxiv.org/pdf/1507.06527.pdf)
+
+[9] [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/pdf/1312.5602v1.pdf)
+
+[10] [Distributional Reinforcement Learning with Quantile Regression](https://arxiv.org/abs/1710.10044)
+
+[11] [Implicit Quantile Networks for Distributional Reinforcement Learning
+](https://arxiv.org/abs/1806.06923)
 
 ### Please fork this repository and contribute to strengthen the tensorflow reinforcement learning ecosystem
 

@@ -1,4 +1,4 @@
-from model import MLPIQN
+from example_model.value.mlp.discrete import MLPIQN
 from agent.discrete.join.iqn import IQN
 import tensorflow as tf
 import numpy as np
@@ -15,7 +15,7 @@ agent = IQN(sess, output_size, mainNet, targetNet, batch_size)
 sess.run(tf.global_variables_initializer())
 agent.update_target()
 saver = tf.train.Saver()
-saver.restore(sess, model_path)
+#saver.restore(sess, model_path)
 
 env = gym.make('LunarLander-v2')
 episode = 0
@@ -29,14 +29,15 @@ while True:
     score = 0
     while not done:
         global_step += 1
-        '''
+        
         if np.random.rand() < e:
             action = np.random.randint(0, output_size, 1)
         else:
-            action = agent.get_action(state)
+            action = agent.get_action([state])
         '''
         env.render()
         action = agent.get_action(state)
+        '''
         action = action[0]
 
         next_state, reward, done, _ = env.step(action)

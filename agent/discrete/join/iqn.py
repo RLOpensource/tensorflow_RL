@@ -72,7 +72,8 @@ class IQN:
 
     def get_action(self, state):
         t = np.random.rand(1, self.num_support)
-        Q_s_a = self.sess.run(self.main_action_support, feed_dict={self.mainNet.input: [state], self.mainNet.tau: t})
-        Q_a = np.mean(Q_s_a, axis=2)
-        action = np.argmax(Q_a, axis=1)
-        return action
+        Q_s_a = self.sess.run(self.main_action_support, feed_dict={self.mainNet.input: state, self.mainNet.tau: t})
+        Q_s_a = Q_s_a[0]
+        Q_a = np.sum(Q_s_a, axis=1)
+        action = np.argmax(Q_a)
+        return [action]

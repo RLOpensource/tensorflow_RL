@@ -1,4 +1,4 @@
-from model import MLPQRDQN
+from example_model.value.mlp.discrete import MLPQRDQN
 from agent.discrete.join.qrdqn import QRDQN
 import tensorflow as tf
 import numpy as np
