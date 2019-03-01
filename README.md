@@ -2,7 +2,7 @@
 
 This repository is designed to provide an easy demo reinforcement learning framework for those studying deep reinforcement learning.
 
-This framework is based on a tensorflow, and you can use it if you want to import the model you want into model.py.
+This framework is based on a tensorflow. And the basic model is implemented in example_model directory. If you want to use your own model, please refer provided model in example_model directory
 
 We provide a tutorial to train the agent for the environment, and tutorials by action and input shape are provided as follows.
 
