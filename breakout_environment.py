@@ -36,6 +36,9 @@ class Environment(Process):
             if force_done:
                 reward = -1
 
+            if force_done:
+                self.env.step(1)
+
             self.score += reward
             self.history[:, :, :3] = self.history[:, :, 1:]
             self.history[:, :, 3] = self.pre_proc(
