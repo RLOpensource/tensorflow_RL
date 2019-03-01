@@ -19,7 +19,7 @@ critic = CNNCritic('critic', window_size, obs_stack)
 agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
-saver.restore(sess, 'breakout_ppo/model')
+#saver.restore(sess, 'breakout_ppo/model')
 learning = True
 
 normalize = True
@@ -31,7 +31,7 @@ episode = 0
 works = []
 parent_conns = []
 child_conns = []
-visualize = True
+visualize = False
 output_malloc = False
 
 for idx in range(num_worker):

@@ -1,6 +1,27 @@
 import tensorflow as tf
 import numpy as np
 
+class MLPQRDQN:
+    def __init__(self, name, state_size, output_size, num_support):
+        self.state_size = state_size
+        self.output_size = output_size
+        self.num_support = num_support
+        with tf.variable_scope(name):
+            self.input = tf.placeholder(tf.float32, shape=[None, self.state_size])
+            self.l1 = tf.layers.dense(inputs=self.input, units=256, activation=tf.nn.relu)
+            self.l2 = tf.layers.dense(inputs=self.l1, units=256, activation=tf.nn.relu)
+            self.l3 = tf.layers.dense(inputs=self.l2, units=self.output_size * self.num_support, activation=None)
+            self.net = tf.reshape(self.l3, [-1, self.output_size, self.num_support])
+
+            self.scope = tf.get_variable_scope().name
+        
+    def get_variables(self):
+        return tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, self.scope)
+
+    def get_trainable_variables(self):
+        return tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, self.scope)
+
+
 class MLPIQN:
     def __init__(self, name, state_size, output_size, num_support, batch_size):
         self.state_size = state_size
@@ -38,37 +59,16 @@ class MLPIQN:
     def get_trainable_variables(self):
         return tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, self.scope)
 
-class MLPQRDQN:
-    def __init__(self, name, state_size, output_size, num_support):
-        self.state_size = state_size
-        self.output_size = output_size
-        self.num_support = num_support
-        with tf.variable_scope(name):
-            self.input = tf.placeholder(tf.float32, shape=[None, self.state_size])
-            self.l1 = tf.layers.dense(inputs=self.input, units=256, activation=tf.nn.relu)
-            self.l2 = tf.layers.dense(inputs=self.l1, units=256, activation=tf.nn.relu)
-            self.l3 = tf.layers.dense(inputs=self.l2, units=self.output_size * self.num_support, activation=None)
-            self.net = tf.reshape(self.l3, [-1, self.output_size, self.num_support])
-
-            self.scope = tf.get_variable_scope().name
-        
-    def get_variables(self):
-        return tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, self.scope)
-
-    def get_trainable_variables(self):
-        return tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, self.scope)
-
 class MLPDQN:
     def __init__(self, name, state_size, output_size):
         self.state_size = state_size
         self.output_size = output_size
+        self.scope = name
         with tf.variable_scope(name):
             self.input = tf.placeholder(tf.float32, shape=[None, self.state_size])
             self.l1 = tf.layers.dense(inputs=self.input, units=256, activation=tf.nn.relu)
-            self.l2 = tf.layers.dense(inputs=self.l1, units=256, activation=tf.nn.relu)
-            self.Q = tf.layers.dense(inputs=self.l2, units=self.output_size, activation=None)
-
-            self.scope = tf.get_variable_scope().name
+            self.l2 = tf.layers.dense(inputs=self.l1,    units=256, activation=tf.nn.relu)
+            self.Q  = tf.layers.dense(inputs=self.l2,    units=self.output_size, activation=None)
 
     def get_variables(self):
         return tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, self.scope)

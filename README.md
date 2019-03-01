@@ -126,6 +126,34 @@ tensorboardX
   <img src="sources/lunarlander.gif" width="50%" height='300'><img src="sources/lunarlander.png" width="50%" height='300'>
 </div>
 
+### 5. Value Based Reinforcement Learning with CNN
+
+* Script : breakout_value_dqn.py, breakout_value_qrdqn.py, breakout_value_iqn.py
+* Environment : BreakoutDeterministic-v4 with Multi-processing
+* Green : IQN, Blue : QRDQN, Pink : DQN
+* Episode : 280
+* Image : IQN
+
+
+###### Breakout
+<div align="center">
+  <img src="sources/iqn_breakout.gif" width="30%" height='300'>
+  <img src="sources/breakout_value.png" width="50%" height='300'>
+</div>
+
+### 6. Value Based Reinforcement Learning with MLP
+
+* Script : lunarLander_value_dqn.py, lunarLander_value_qrdqn.py, lunarLander_value_iqn.py
+* Environment : LunarLander-v2 with Multi-processing
+* Orange : IQN, Blue : QRDQN, Red : DQN
+* Episode : 250
+* Image : IQN
+
+###### Breakout
+<div align="center">
+  <img src="sources/iqn_lunarlander.gif" width="49%" height='300'>
+  <img src="sources/lunarlander_value.png" width="50%" height='300'>
+</div>
 
 ## Member
 
