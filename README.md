@@ -104,7 +104,7 @@ tensorboardX
 
 * Script : breakout_rollout_a2c.py, breakout_rollout_ppo.py, breakout_rollout_vpg.py
 * Environment : BreakoutDeterministic-v4 with Multi-processing
-* Orange : a2c, Blue : ppo, Red : vpg
+* Blue : ppo, Orange : a2c, Red : vpg
 * Episode : 600
 * Image : PPO
 
@@ -117,7 +117,7 @@ tensorboardX
 
 * Script : lunarLander_rollout_a2c.py, lunarLander_rollout_ppo.py, lunarLander_rollout_vpg.py
 * Environment : LunarLander-v2 with Multi-processing
-* Orange : a2c, Blue : ppo, Red : vpg
+* Blue : ppo, Orange : a2c, Red : vpg
 * Episode : 350
 * Image : PPO
 
