@@ -1,7 +1,7 @@
 import gym
-from agent.continuous.seperate.ddpg import DDPG
+from agent.continuous.seperate.td3 import TD3
 from example_model.policy.mlp.continuous import MLPDDPGContinuousActor
-from example_model.policy.mlp.continuous import MLPDDPGContinuousCritic
+from example_model.policy.mlp.continuous import MLPTD3ContinousCritic
 from agent import utils
 import tensorflow as tf
 import numpy as np
@@ -14,10 +14,10 @@ output_size = 1
 env = gym.make('Pendulum-v0')
 sess = tf.Session()
 target_actor = MLPDDPGContinuousActor('target_actor',state_size,output_size)
-target_critic = MLPDDPGContinuousCritic('target_critic',state_size,output_size)
+target_critic = MLPTD3ContinousCritic('target_critic',state_size,output_size)
 actor = MLPDDPGContinuousActor('actor',state_size,output_size)
-critic = MLPDDPGContinuousCritic('critic',state_size,output_size)
-agent = DDPG(sess,state_size,output_size,1,1,target_actor,target_critic,actor,critic)
+critic = MLPTD3ContinousCritic('critic',state_size,output_size)
+agent = TD3(sess,state_size,output_size,1,1,target_actor,target_critic,actor,critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 #saver.restore(sess,'pendulum_ddpg/model')

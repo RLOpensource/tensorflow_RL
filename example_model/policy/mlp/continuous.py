@@ -39,6 +39,29 @@ class MLPDDPGContinuousCritic:
     def get_trainable_variables(self):
         return tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, self.scope)
 
+class MLPTD3ContinousCritic:
+    def __init__(self,name,state_size,action_size):
+        self.state_size = state_size
+        self.action_size = action_size
+        self.scope = name
+        with tf.variable_scope(name):
+            self.state = tf.placeholder(dtype=tf.float32,shape=[None,self.state_size])
+            self.action = tf.placeholder(dtype=tf.float32,shape=[None,self.action_size])
+            self.cat_state_action = tf.concat([self.state,self.action],1)
+            net1_l1 = tf.layers.dense(self.cat_state_action,128,tf.nn.leaky_relu,trainable=True)
+            net1_l2 = tf.layers.dense(net1_l1, 128, tf.nn.leaky_relu, trainable=True)
+            net1_l3 = tf.layers.dense(net1_l2, 128, tf.nn.leaky_relu, trainable=True)
+            self.critic1 = tf.layers.dense(net1_l3,1,None,trainable=True)
+            net2_l1 = tf.layers.dense(self.cat_state_action,128,tf.nn.leaky_relu,trainable=True)
+            net2_l2 = tf.layers.dense(net2_l1, 128, tf.nn.leaky_relu, trainable=True)
+            net2_l3 = tf.layers.dense(net2_l2, 128, tf.nn.leaky_relu, trainable=True)
+            self.critic2 = tf.layers.dense(net2_l3,1,None,trainable=True)
+
+    def get_variables(self):
+        return tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, self.scope)
+
+    def get_trainable_variables(self):
+        return tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, self.scope)
 
 class MLPContinuousActor:
     def __init__(self, name, state_size, output_size):
