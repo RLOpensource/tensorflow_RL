@@ -20,7 +20,7 @@ env = gym.make('LunarLander-v2')
 episode = 0
 while True:
     episode += 1
-    e = 1. / ((episode / 10) + 1)
+    e = 1. / ((episode / 20) + 1)
     done = False
     state = env.reset()
     global_step = 0
@@ -40,14 +40,15 @@ while True:
         if len(agent.memory) > 1000:
             _, loss = agent.train()
             l += loss
-            if global_step % 5 == 0:
+            if global_step % 1000 == 0:
                 agent.update_target()
         agent.append(state, next_state, action, reward, done)
         state = next_state
-        if done:
-            if episode < 467:
-                writer.add_scalar('data/reward', score, episode)
-                writer.add_scalar('data/loss', l, episode)
-                writer.add_scalar('data/epsilon', e, episode)
-            print('episode:', episode, 'reward:', score, 'expectation loss:', l, 'epsilon:', e)
-            saver.save(sess, model_path)
+    if episode < 2000:
+        writer.add_scalar('data/reward', score, episode)
+        writer.add_scalar('data/loss', l, episode)
+        writer.add_scalar('data/epsilon', e, episode)
+    else:
+        break
+    print('episode:', episode, 'reward:', score, 'expectation loss:', l, 'epsilon:', e)
+    saver.save(sess, model_path)

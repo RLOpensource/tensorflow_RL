@@ -4,7 +4,7 @@ import random
 from collections import deque
 from agent.utils import OU_noise
 
-class DDPG:
+class TD3:
     def __init__(self, sess, state_size, action_size, num_worker, num_step, target_actor, target_critic, actor, critic):
         self.sess = sess
         self.action_size = action_size
@@ -13,7 +13,7 @@ class DDPG:
         self.actor_lr = 0.0001
         self.batch_size = 32
         self.gamma = 0.99
-        self.target_update_rate = 1e-3
+        self.target_update_rate = 5e-3
 
         self.actor = actor
         self.target_actor = target_actor
@@ -23,7 +23,6 @@ class DDPG:
         self.memory = deque(maxlen=1000000)
         self.noise_generator = OU_noise(action_size,num_worker)
 
-        self.value = self.critic.critic
         self.pi = self.actor.actor
 
         self.pi_params = self.actor.get_trainable_variables()
@@ -40,10 +39,11 @@ class DDPG:
         self.target_value = tf.placeholder(tf.float32,shape=[None])
         self.action = tf.placeholder(tf.float32,shape=[None,self.action_size])
 
-        critic_loss = tf.losses.huber_loss(self.target_value,tf.squeeze(self.value))
+        #critic_loss = tf.reduce_max([tf.losses.huber_loss(self.target_value,tf.squeeze(self.critic.critic1)),tf.losses.huber_loss(self.target_value,tf.squeeze(self.critic.critic2))])
+        critic_loss = tf.losses.mean_squared_error(self.target_value,tf.squeeze(self.critic.critic1)) + tf.losses.mean_squared_error(self.target_value,tf.squeeze(self.critic.critic2))
 
-        action_grad = tf.clip_by_value(tf.gradients(self.value,self.critic.action),-10,10)
-        #action_grad = tf.gradients(self.value,self.critic.action)
+        action_grad = tf.clip_by_value(tf.gradients(self.critic.critic1,self.critic.action),-10,10)
+
         pi_grad = tf.gradients(xs=self.pi_params,ys=self.pi,grad_ys=action_grad)
         for idx,grads in enumerate(pi_grad):
             pi_grad[idx] = -grads/self.batch_size
@@ -61,10 +61,11 @@ class DDPG:
         rewards = np.asarray([e[2] for e in batch])
         next_states = np.asarray([e[3] for e in batch])
         dones = np.asarray([e[4] for e in batch])
-        target_action_input = np.clip(self.sess.run(self.target_actor.actor,feed_dict={self.target_actor.state:next_states}) + np.random.normal(0,0.01,[self.batch_size,self.action_size]),-1,1)
-        target_q_value = self.sess.run(self.target_critic.critic,feed_dict={self.target_critic.state:next_states,
-                                                                            self.target_critic.action:target_action_input})
-        targets = np.asarray([r + self.gamma * (1-d) * tv for r,tv,d in zip(rewards,target_q_value,dones)])
+        target_action_input = np.clip(self.sess.run(self.target_actor.actor,feed_dict={self.target_actor.state:next_states}) + np.clip(np.random.normal(0,0.01,[self.batch_size,self.action_size]),-0.1,0.1),-1,1)
+        target_q_value1,target_q_value2 = self.sess.run([self.target_critic.critic1,self.target_critic.critic2],
+                                       feed_dict={self.target_critic.state:next_states,
+                                                  self.target_critic.action:target_action_input})
+        targets = np.asarray([r + self.gamma * (1-d) * min(tv1,tv2) for r,tv1,tv2,d in zip(rewards,target_q_value1,target_q_value2,dones)])
         self.sess.run(self.ctrain_op,feed_dict=
         {
             self.critic.state:states,
