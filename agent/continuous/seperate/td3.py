@@ -61,11 +61,17 @@ class TD3:
         rewards = np.asarray([e[2] for e in batch])
         next_states = np.asarray([e[3] for e in batch])
         dones = np.asarray([e[4] for e in batch])
-        target_action_input = np.clip(self.sess.run(self.target_actor.actor,feed_dict={self.target_actor.state:next_states}) + np.clip(np.random.normal(0,0.01,[self.batch_size,self.action_size]),-0.1,0.1),-1,1)
+        target_action_input = np.clip(
+            self.sess.run(self.target_actor.actor,
+                          feed_dict={self.target_actor.state:next_states})
+            + np.clip(np.random.normal(0,0.01,[self.batch_size,self.action_size]),-0.1,0.1),-1,1)
         target_q_value1,target_q_value2 = self.sess.run([self.target_critic.critic1,self.target_critic.critic2],
                                        feed_dict={self.target_critic.state:next_states,
                                                   self.target_critic.action:target_action_input})
-        targets = np.asarray([r + self.gamma * (1-d) * min(tv1,tv2) for r,tv1,tv2,d in zip(rewards,target_q_value1,target_q_value2,dones)])
+        targets = np.asarray(
+            [r + self.gamma * (1 - d) * min(tv1, tv2) for r, tv1, tv2, d in
+             zip(rewards, target_q_value1, target_q_value2, dones)])
+        #targets = np.asarray([r + self.gamma * (1-d) * (0.9*min(tv1,tv2) + 0.1*max(tv1,tv2)) for r,tv1,tv2,d in zip(rewards,target_q_value1,target_q_value2,dones)])
         self.sess.run(self.ctrain_op,feed_dict=
         {
             self.critic.state:states,

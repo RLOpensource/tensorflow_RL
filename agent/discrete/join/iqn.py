@@ -6,7 +6,7 @@ import numpy as np
 class IQN:
     def __init__(self, sess, output_size, mainNet, targetNet, batch_size, max_length=1000000):
         self.memory = collections.deque(maxlen=max_length)
-        self.lr = 0.00025
+        self.lr = 0.00005
         self.output_size = output_size
         self.sess = sess
         self.batch_size = batch_size
@@ -43,9 +43,9 @@ class IQN:
         Loss = tf.where(tf.less(error_loss, 0.0), inv_tau * Huber_loss, tau * Huber_loss)
         self.loss = tf.reduce_mean(tf.reduce_sum(tf.reduce_mean(Loss, axis=2), axis=1))
 
-        self.train_op = tf.train.AdamOptimizer(self.lr).minimize(self.loss)
+        self.train_op = tf.train.AdamOptimizer(learning_rate=self.lr, epsilon=1e-2/self.batch_size).minimize(self.loss)
 
-    def train(self):
+    def train_model(self):
         minibatch = random.sample(self.memory, self.batch_size)
         state_stack = [mini[0] for mini in minibatch]
         next_state_stack = [mini[1] for mini in minibatch]
@@ -62,7 +62,8 @@ class IQN:
         next_action = np.argmax(np.mean(Q_next_state, axis=2), axis=1)
         Q_next_state_next_action = [Q_next_state[i, action, :] for i, action in enumerate(next_action)]
         T_theta = [reward + (1-done)*self.gamma*Q for reward, Q, done in zip(reward_stack, Q_next_state_next_action, done_stack)]
-        return self.sess.run([self.train_op, self.loss], feed_dict={self.mainNet.input: state_stack, self.action: action_stack, self.mainNet.tau:t, self.Y: T_theta})
+        _, l =  self.sess.run([self.train_op, self.loss], feed_dict={self.mainNet.input: state_stack, self.action: action_stack, self.mainNet.tau:t, self.Y: T_theta})
+        return l
 
     def update_target(self):
         self.sess.run(self.assign_ops)

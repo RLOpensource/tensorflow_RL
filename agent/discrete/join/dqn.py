@@ -6,61 +6,53 @@ import numpy as np
 class DQN:
     def __init__(self, sess, output_size, mainNet, targetNet, max_length=1000000):
         self.memory = collections.deque(maxlen=max_length)
-        self.lr = 0.00025
-        self.output_size = output_size
         self.mainNet = mainNet
         self.targetNet = targetNet
+        self.output_size = output_size
         self.batch_size = 8
-        self.gamma = 0.99
-        self.memory = collections.deque(maxlen=max_length)
         self.sess = sess
+        self.gamma = 0.99
+        self.lr = 0.00025
 
-        self.main_network = self.mainNet.Q
-        self.target_network = self.targetNet.Q
-        self.target_params = self.targetNet.get_trainable_variables()
-        self.main_params = self.mainNet.get_trainable_variables()
+        self.target = tf.placeholder(tf.float32, [None])
+        self.action = tf.placeholder(tf.int32, [None])
 
-        self.assign_ops = []
-        for v_old, v in zip(self.target_params, self.main_params):
-            self.assign_ops.append(tf.assign(v_old, v))
+        self.target_vars = self.targetNet.get_trainable_variables()
+        self.main_vars = self.mainNet.get_trainable_variables()
 
-        self.action = tf.placeholder(tf.float32, [None, self.output_size])
-        self.Y = tf.placeholder(tf.float32, [None, 1])
+        self.update_oldpi_op = [oldp.assign(p) for p, oldp in zip(self.main_vars, self.target_vars)]
 
-        self.Q_s_a = self.main_network * self.action
-        self.Q_s_a = tf.expand_dims(tf.reduce_sum(self.Q_s_a, axis=1), -1)
-        self.loss = tf.losses.mean_squared_error(self.Y, self.Q_s_a)
-        self.train_op = tf.train.AdamOptimizer(self.lr).minimize(self.loss)
+        self.action_one_hot = tf.one_hot(self.action, self.output_size)
+        self.q_val = self.mainNet.Q
+        self.q_val_action = tf.reduce_sum(self.q_val * self.action_one_hot, axis=1)
 
-    def train(self):
-        minibatch = random.sample(self.memory, self.batch_size)
-        state_stack = [mini[0] for mini in minibatch]
-        next_state_stack = [mini[1] for mini in minibatch]
-        action_stack = [mini[2] for mini in minibatch]
-        reward_stack = [mini[3] for mini in minibatch]
-        done_stack = [mini[4] for mini in minibatch]
-        done_stack = [int(i) for i in done_stack]
-        onehotaction = np.zeros([self.batch_size, self.output_size])
-        for i, j in zip(onehotaction, action_stack):
-            i[j] = 1
-        action_stack = np.stack(onehotaction)
-
-        Q_next_state = self.sess.run(self.target_network, feed_dict={self.targetNet.input: next_state_stack})
-        next_action = np.argmax(Q_next_state, axis=1)
-        Q_next_state_next_action = [s[a] for s, a in zip(Q_next_state, next_action)]
-        T_theta = [[reward + (1-done)*self.gamma * Q] for reward, Q, done in zip(reward_stack, Q_next_state_next_action, done_stack)]
-        
-        return self.sess.run([self.train_op, self.loss],
-                    feed_dict={self.mainNet.input: state_stack, self.action: action_stack, self.Y: T_theta})
-
+        self.loss = tf.reduce_mean((self.target - self.q_val_action) ** 2)
+        self.train_op = tf.train.AdamOptimizer(learning_rate=self.lr, epsilon=1e-2).minimize(self.loss)
 
     def update_target(self):
-        self.sess.run(self.assign_ops)
+        self.sess.run(self.update_oldpi_op)
 
-    def append(self, state, next_state, action_one_hot, reward, done):
-        self.memory.append([state, next_state, action_one_hot, reward, done])
+    def append(self, state, next_state, action, reward, done):
+        self.memory.append([state, next_state, action, reward, done])
 
     def get_action(self, state):
-        Q = self.sess.run(self.main_network, feed_dict={self.mainNet.input: state})
-        action = np.argmax(Q, axis=1)
-        return action
+        q_val = self.sess.run(self.q_val, feed_dict={self.mainNet.input: state})
+        maxq = np.argmax(q_val, axis=1)
+        return maxq
+
+    def train_model(self):
+        minibatch = random.sample(self.memory, self.batch_size)
+        state = [mini[0] for mini in minibatch]
+        next_state = [mini[1] for mini in minibatch]
+        action = [mini[2] for mini in minibatch]
+        reward = [mini[3] for mini in minibatch]
+        done = [mini[4] for mini in minibatch]
+
+        nextQ = self.sess.run(self.targetNet.Q, feed_dict={self.targetNet.input: next_state})
+        max_nextQ = np.max(nextQ, axis=1)
+        targets = [r + self.gamma * (1-d) * mQ for r, d, mQ in zip(reward, done, max_nextQ)]
+        _, l = self.sess.run([self.train_op, self.loss], feed_dict={self.mainNet.input: state,
+                                                               self.target: targets,
+                                                               self.action: action})
+
+        return l
