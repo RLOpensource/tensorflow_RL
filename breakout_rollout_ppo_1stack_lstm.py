@@ -1,88 +1,104 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from agent.discrete.seperate.ppo import PPOLSTM
-from agent.utils import get_gaes, split_episode
+from breakout_environment_custom import Environment
+from multiprocessing import Pipe
+from agent.discrete.seperate.ppo import PPO
+from agent.utils import get_gaes
+from example_model.policy.cnn.discrete import CNNLSTMActor
+from example_model.policy.cnn.discrete import CNNLSTMCritic
 from tensorboardX import SummaryWriter
-from model import CNNActorLSTM, CNNCriticLSTM
-import cv2
-import gym
+import time
 
-#writer = SummaryWriter()
+writer = SummaryWriter()
+works = []
+parent_conns = []
+child_conns = []
+visualize = True
+normalize = True
+num_worker, num_step = 4, 256
+sample_idx = 0
+window_size, output_size, obs_stack = 84, 3, 3
+lstm_units, lstm_layers = 256, 1
+
 sess = tf.Session()
-num_worker = 1
-window_size, output_size, lstm_units, lstm_layers = 84, 3, 512, 1
-old_actor = CNNActorLSTM('old_actor', window_size, output_size, lstm_units, lstm_layers)
-actor = CNNActorLSTM('actor', window_size, output_size, lstm_units, lstm_layers)
-critic = CNNCriticLSTM('critic', window_size, lstm_units, lstm_layers)
-agent = PPOLSTM(sess, output_size, num_worker, None, old_actor, actor, critic)
+actor = CNNLSTMActor('actor', window_size, obs_stack, output_size, lstm_units, lstm_layers)
+critic = CNNLSTMCritic('critic', window_size, obs_stack, output_size, lstm_units, lstm_layers)
+agent = PPO(sess, output_size, num_worker, num_step, actor, critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
-#saver.restore(sess, 'breakout_ppo_1env1lstm/model')
+#saver.restore(sess, 'breakout_ppo_lstm/model')
 
-learning = True
-normalize = True
-global_update = 0
-sample_idx = 0
+for idx in range(num_worker):
+    parent_conn, child_conn = Pipe()
+    work = Environment(visualize if sample_idx == idx else False, idx, child_conn, obs_stack)
+    work.start()
+    works.append(work)
+    parent_conns.append(parent_conn)
+    child_conns.append(child_conn)
+
+states = np.zeros([num_worker, 84, 84, obs_stack])
 score = 0
+global_step = 0
 episode = 0
 
-train_size = 16
-
-env = gym.make('BreakoutDeterministic-v4')
-
-total_state, total_reward, total_done, total_next_state, total_action = [], [], [], [], []
-total_value, total_next_value = [], []
-episode = 0
 while True:
+    total_state, total_reward, total_done, total_next_state, total_action = [], [], [], [], []
+    global_step += 1
 
-    episode += 1
-    _ = env.reset()
-    env.step(1)
-    state = cv2.resize(env.env.ale.getScreenGrayscale().squeeze().astype('float32'), (84, 84))
-    state *= (1.0/255.0)
-    state = np.reshape(state, [window_size, window_size, 1])
-    actor_init, critic_init = agent.get_init()
-    done = False
+    for _ in range(num_step):
+        actions = agent.get_action(states)
 
-    while not done:
-        #env.render()
-        action, value, actor_init, value_init = agent.get_action([state], actor_init, critic_init)
-        action = action[0]
-        _, reward, done, info = env.step(action+1)
+        for parent_conn, action in zip(parent_conns, actions):
+            parent_conn.send(action)
+        
+        next_states, rewards, dones, real_dones = [], [], [], []
+        
+        for parent_conn in parent_conns:
+            s, r, d, rd = parent_conn.recv()
+            next_states.append(s)
+            rewards.append(r)
+            dones.append(d)
+            real_dones.append(rd)
 
-        next_state = cv2.resize(env.env.ale.getScreenGrayscale().squeeze().astype('float32'), (84, 84))
-        next_state *= (1.0/255.0)
-        next_state = np.reshape(next_state, [window_size, window_size, 1])
+        next_states = np.stack(next_states)
+        rewards = np.hstack(rewards)
+        dones = np.hstack(dones)
+        real_dones = np.hstack(real_dones)
 
-        _, next_value, _, _ = agent.get_action([next_state], actor_init, critic_init)
+        score += rewards[sample_idx]
 
-        if info['ale.lives'] != 5:
-            done = True
-            reward = -1
+        total_state.append(states)
+        total_next_state.append(next_states)
+        total_done.append(dones)
+        total_reward.append(rewards)
+        total_action.append(actions)
 
-        total_next_value.append(next_value)
-        total_value.append(value)
-        total_state.append(state)
-        total_next_state.append(next_state)
-        total_done.append(done)
-        total_reward.append(reward)
-        total_action.append(action)
+        states = next_states
 
-        state = next_state
+        if real_dones[sample_idx]:
+            episode += 1
+            writer.add_scalar('data/reward_per_episode', score, episode)
+            print(episode, score)
+            score = 0
 
-    if episode % train_size == 0:
-        total_state = np.stack(total_state)
-        total_next_state = np.stack(total_next_state)
-        total_value = np.stack(total_value)
-        total_next_value = np.stack(total_next_value)
-        total_action = np.stack(total_action)
-        total_done = np.stack(total_done)
-        total_reward = np.stack(total_reward)
+    total_state = np.stack(total_state).transpose([1, 0, 2, 3, 4]).reshape([-1, window_size, window_size, obs_stack])
+    total_next_state = np.stack(total_next_state).transpose([1, 0, 2, 3, 4]).reshape([-1, window_size, window_size, obs_stack])
+    total_action = np.stack(total_action).transpose([1, 0]).reshape([-1])
+    total_done = np.stack(total_done).transpose([1, 0]).reshape([-1])
+    total_reward = np.stack(total_reward).transpose([1, 0]).reshape([-1])
 
-        adv, target = get_gaes(total_reward, total_done, total_value, total_next_value,
-                                agent.gamma, agent.lamda, True)
+    total_target, total_adv = [], []
+    for idx in range(num_worker):
+        value, next_value = agent.get_value(total_state[idx * num_step:(idx + 1) * num_step],
+                                                total_next_state[idx * num_step:(idx + 1) * num_step])
+        adv, target = get_gaes(total_reward[idx * num_step:(idx + 1) * num_step],
+                                    total_done[idx * num_step:(idx + 1) * num_step],
+                                    value, next_value, agent.gamma, agent.lamda, normalize)
+        total_target.append(target)
+        total_adv.append(adv)
 
-        total_state, total_reward, total_done, total_next_state, total_action = [], [], [], [], []
-        total_value, total_next_value = [], []
+    agent.train_model(total_state, total_action, np.hstack(total_target), np.hstack(total_adv))
 
+    writer.add_scalar('data/reward_per_rollout', sum(total_reward)/(num_worker), global_step)
+    saver.save(sess, 'breakout_ppo_lstm/model')

@@ -155,6 +155,20 @@ tensorboardX
   <img src="sources/lunarlander_value.png" width="50%" height='300'>
 </div>
 
+### 7. Discrete Action CNN LSTM Breakout inspired from drqn
+
+* Script : breakout_rollout_ppo_1stack_lstm.py, breakout_rollout_ppo_1stack.py
+* Environment : BreakoutDeterministic-v4 with Multi-processing
+* Orange : PPOLSTM, Blue : PPO-1stack
+* Episode : 1000
+* Image : PPOLSTM
+
+###### Breakout
+<div align="center">
+  <img src="sources/breakout_lstm.gif" width="30%" height='300'>
+  <img src="sources/breakout_lstm_cnn.png" width="50%" height='300'>
+</div>
+
 ## Member
 
 - [https://github.com/chagmgang](https://github.com/chagmgang)

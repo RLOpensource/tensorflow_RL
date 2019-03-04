@@ -70,9 +70,9 @@ class MLPContinuousActor:
 
         with tf.variable_scope(name):
             self.input = tf.placeholder(dtype=tf.float32, shape=[None, self.state_size])
-            self.l1 = tf.layers.dense(self.input, 128, tf.nn.tanh, trainable=True)
-            self.l2 = tf.layers.dense(self.l1, 128, tf.nn.tanh, trainable=True)
-            self.l3 = tf.layers.dense(self.l2, 128, tf.nn.tanh, trainable=True)
+            self.l1 = tf.layers.dense(self.input, 128, tf.nn.relu, trainable=True)
+            self.l2 = tf.layers.dense(self.l1, 128, tf.nn.relu, trainable=True)
+            self.l3 = tf.layers.dense(self.l2, 128, tf.nn.relu, trainable=True)
             self.mu = tf.layers.dense(self.l3, self.output_size, tf.nn.tanh, trainable=True)
             self.sigma = tf.ones_like(self.mu)
             #self.sigma = tf.layers.dense(self.l3, self.output_size, tf.nn.softplus, trainable=True)
