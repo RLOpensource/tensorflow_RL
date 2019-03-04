@@ -70,8 +70,7 @@ class TD3:
                                        feed_dict={self.target_critic.state:next_states,
                                                   self.target_critic.action:target_action_input})
         targets = np.asarray(
-            [r + self.gamma * (1 - d) * tv for r, tv, d in
-             zip(rewards, target_q_value, dones)])
+            [r + self.gamma * (1 - d) * tv for r, tv, d in zip(rewards, target_q_value, dones)])
         self.sess.run(self.ctrain_op,feed_dict=
         {
             self.critic.state:states,

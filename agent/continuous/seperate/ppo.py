@@ -42,40 +42,28 @@ class PPO:
         self.atrain_op = tf.train.AdamOptimizer(self.actor_lr).minimize(actor_loss)
         self.ctrain_op = tf.train.AdamOptimizer(self.critic_lr).minimize(critic_loss)
 
-    def train_model(self):
-        batch = random.sample(self.memory,self.batch_size)
-        states = np.asarray([e[0] for e in batch])
-        actions = np.asarray([e[1] for e in batch])
-        rewards = np.asarray([e[2] for e in batch])
-        next_states = np.asarray([e[3] for e in batch])
-        dones = np.asarray([e[4] for e in batch])
-        target_action_input = np.clip(
-            self.sess.run(self.target_actor.actor,
-                          feed_dict={self.target_actor.state:next_states})
-            + np.clip(np.random.normal(0,0.1,[self.batch_size,self.action_size]),-0.1,0.1),-1,1)
-        target_q_value = self.sess.run(self.target_q,
-                                       feed_dict={self.target_critic.state:next_states,
-                                                  self.target_critic.action:target_action_input})
-        targets = np.asarray(
-            [r + self.gamma * (1 - d) * tv for r, tv, d in
-             zip(rewards, target_q_value, dones)])
-        self.sess.run(self.ctrain_op,feed_dict=
-        {
-            self.critic.state:states,
-            self.critic.action:actions,
-            self.target_value:np.squeeze(targets)
-        })
-        action_for_train = self.sess.run(self.actor.actor,feed_dict={self.actor.state:states})
-        self.sess.run(self.atrain_op,feed_dict=
-        {
-            self.actor.state:states,
-            self.critic.state:states,
-            self.critic.action:action_for_train
-        })
-        self.sess.run(self.update_target_soft)
+    def train_model(self, state, action, target, adv):
+        self.sess.run(self.update_oldpi_op)
+        sample_range = np.arange(len(state))
+        for _ in range(self.epoch):
+            np.random.shuffle(sample_range)
+            for j in range(int(len(state)/self.batch_size)):
+                sample_idx = sample_range[self.batch_size * j:self.batch_size * (j + 1)]
+                state_batch = [state[i] for i in sample_idx]
+                action_batch = [action[i] for i in sample_idx]
+                advs_batch = [adv[i] for i in sample_idx]
+                targets_batch = [target[i] for i in sample_idx]
+                feed_dict={self.actor.input: state_batch,
+                    self.critic.input: state_batch,
+                    self.old_actor.input: state_batch,
+                    self.targets: targets_batch,
+                    self.adv: advs_batch,
+                    self.action: action_batch}
+                self.sess.run([self.atrain_op, self.ctrain_op], feed_dict=feed_dict)
         
     def get_action(self, state):
         action = self.sess.run(self.sample_op, feed_dict={self.actor.input: state})
+        action = 2 * action
         return np.clip(action, -1, 1)
 
     def get_value(self, state, next_state):

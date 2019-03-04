@@ -70,11 +70,11 @@ class MLPContinuousActor:
 
         with tf.variable_scope(name):
             self.input = tf.placeholder(dtype=tf.float32, shape=[None, self.state_size])
-            self.l1 = tf.layers.dense(self.input, 128, tf.nn.relu, trainable=True)
-            self.l2 = tf.layers.dense(self.l1, 128, tf.nn.relu, trainable=True)
-            self.l3 = tf.layers.dense(self.l2, 128, tf.nn.relu, trainable=True)
-            self.mu = tf.layers.dense(self.l3, self.output_size, tf.nn.tanh, trainable=True)
-            self.sigma = tf.ones_like(self.mu)
+            self.l1 = tf.layers.dense(self.input, 256, tf.nn.relu, trainable=True)
+            self.l2 = tf.layers.dense(self.l1, 256, tf.nn.relu, trainable=True)
+            self.l3 = tf.layers.dense(self.l2, 256, tf.nn.relu, trainable=True)
+            self.mu = tf.layers.dense(self.l3, self.output_size, tf.nn.tanh, trainable=True) * 0.5
+            self.sigma = tf.ones_like(self.mu) * 0.3
             #self.sigma = tf.layers.dense(self.l3, self.output_size, tf.nn.softplus, trainable=True)
 
             self.actor = tf.distributions.Normal(loc=self.mu, scale=self.sigma)
@@ -93,9 +93,9 @@ class MLPContinuousCritic:
 
         with tf.variable_scope(name):
             self.input = tf.placeholder(dtype=tf.float32, shape=[None, self.state_size])
-            self.l1 = tf.layers.dense(self.input, 128, tf.nn.relu, trainable=True)
-            self.l2 = tf.layers.dense(self.l1, 128, tf.nn.relu, trainable=True)
-            self.l3 = tf.layers.dense(self.l2, 128, tf.nn.relu, trainable=True)
+            self.l1 = tf.layers.dense(self.input, 256, tf.nn.relu, trainable=True)
+            self.l2 = tf.layers.dense(self.l1, 256, tf.nn.relu, trainable=True)
+            self.l3 = tf.layers.dense(self.l2, 256, tf.nn.relu, trainable=True)
             self.critic = tf.layers.dense(self.l3, 1)
 
             self.scope = tf.get_variable_scope().name

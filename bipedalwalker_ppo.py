@@ -66,7 +66,7 @@ while True:
 
             agent.train_model(total_state, total_action, target, adv)
             print(update_step, score/train_size)
-            if update_step < 1000000000000:
+            if update_step < 1000:
                 writer.add_scalar('data/reward', score/train_size, update_step)
                 saver.save(sess, 'bipedalwalker_ppo/model')
             total_state, total_reward, total_done, total_next_state, total_action = [], [], [], [], []

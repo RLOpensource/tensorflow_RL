@@ -51,6 +51,8 @@ while True:
         if len(agent.memory) >= 10000:
             agent.train_model()
 
+    print(score, ep)
+
     scores.append(score)
     agent.noise_generator.reset()
     if len(agent.memory) >= 10000 and epsilon >= 0.01:
