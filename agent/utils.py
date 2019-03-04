@@ -108,7 +108,7 @@ def get_rtgs_discount(rewards, dones, values, gamma): # get_rtgs for VPG
 
 
 class OU_noise:
-    def __init__(self,action_size,worker_size,mu=0,theta=0.01,sigma=0.2):
+    def __init__(self,action_size,worker_size,mu=0,theta=0.1,sigma=0.2):
         self.action_size = action_size
         self.worker_size = worker_size
         self.mu = mu

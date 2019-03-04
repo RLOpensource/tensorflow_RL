@@ -13,7 +13,7 @@ class TD3:
         self.actor_lr = 0.0001
         self.batch_size = 32
         self.gamma = 0.99
-        self.target_update_rate = 5e-3
+        self.target_update_rate = 1e-3
 
         self.actor = actor
         self.target_actor = target_actor
@@ -38,8 +38,9 @@ class TD3:
 
         self.target_value = tf.placeholder(tf.float32,shape=[None])
         self.action = tf.placeholder(tf.float32,shape=[None,self.action_size])
+        cat_target = tf.concat([self.target_critic.critic1,self.target_critic.critic2],axis=1)
+        self.target_q = tf.reduce_min(cat_target,axis=1)
 
-        #critic_loss = tf.reduce_max([tf.losses.huber_loss(self.target_value,tf.squeeze(self.critic.critic1)),tf.losses.huber_loss(self.target_value,tf.squeeze(self.critic.critic2))])
         critic_loss = tf.losses.mean_squared_error(self.target_value,tf.squeeze(self.critic.critic1)) + tf.losses.mean_squared_error(self.target_value,tf.squeeze(self.critic.critic2))
 
         action_grad = tf.clip_by_value(tf.gradients(self.critic.critic1,self.critic.action),-10,10)
@@ -64,14 +65,13 @@ class TD3:
         target_action_input = np.clip(
             self.sess.run(self.target_actor.actor,
                           feed_dict={self.target_actor.state:next_states})
-            + np.clip(np.random.normal(0,0.01,[self.batch_size,self.action_size]),-0.1,0.1),-1,1)
-        target_q_value1,target_q_value2 = self.sess.run([self.target_critic.critic1,self.target_critic.critic2],
+            + np.clip(np.random.normal(0,0.1,[self.batch_size,self.action_size]),-0.1,0.1),-1,1)
+        target_q_value = self.sess.run(self.target_q,
                                        feed_dict={self.target_critic.state:next_states,
                                                   self.target_critic.action:target_action_input})
         targets = np.asarray(
-            [r + self.gamma * (1 - d) * min(tv1, tv2) for r, tv1, tv2, d in
-             zip(rewards, target_q_value1, target_q_value2, dones)])
-        #targets = np.asarray([r + self.gamma * (1-d) * (0.9*min(tv1,tv2) + 0.1*max(tv1,tv2)) for r,tv1,tv2,d in zip(rewards,target_q_value1,target_q_value2,dones)])
+            [r + self.gamma * (1 - d) * tv for r, tv, d in
+             zip(rewards, target_q_value, dones)])
         self.sess.run(self.ctrain_op,feed_dict=
         {
             self.critic.state:states,

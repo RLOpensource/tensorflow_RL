@@ -21,7 +21,7 @@ critic = MLPTD3ContinousCritic('critic',state_size,output_size)
 agent = TD3(sess,state_size,output_size,1,1,target_actor,target_critic,actor,critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
-#saver.restore(sess,'bipedalwalker_ddpg/model')
+#saver.restore(sess,'bipedalwalker_td3/model')
 
 ep = 0
 clip = 1.0
@@ -35,8 +35,8 @@ while True:
     score = 0
     while not done:
 
-        if ep % 10 == 0:
-            env.render()
+        #if ep % 10 == 0:
+        #    env.render()
         #env.render()
         action = agent.get_action([state], epsilon)
 
@@ -59,6 +59,6 @@ while True:
     if ep % 10 == 0:
         update_step += 1
         print(update_step, np.mean(scores), epsilon)
-        writer.add_scalar('data/reward', score, update_step)
-        saver.save(sess, 'bipedalwalker_ddpg/model')
+        writer.add_scalar('data/reward', np.mean(scores), update_step)
+        saver.save(sess, 'bipedalwalker_td3/model')
         scores = []

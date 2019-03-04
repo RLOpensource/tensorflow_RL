@@ -24,7 +24,7 @@ saver = tf.train.Saver()
 agent.epoch = 4
 
 ep = 0
-train_size = 4
+train_size = 16
 total_state, total_reward, total_done, total_next_state, total_action = [], [], [], [], []
 score = 0
 update_step = 0
