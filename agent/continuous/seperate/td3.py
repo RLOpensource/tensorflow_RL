@@ -21,6 +21,7 @@ class TD3:
         self.target_critic = target_critic
 
         self.memory = deque(maxlen=1000000)
+        self.c = 0.1
         self.noise_generator = OU_noise(action_size,num_worker)
 
         self.pi = self.actor.actor
@@ -40,7 +41,7 @@ class TD3:
         self.action = tf.placeholder(tf.float32,shape=[None,self.action_size])
         cat_target = tf.concat([self.target_critic.critic1,self.target_critic.critic2],axis=1)
         self.target_q = tf.reduce_min(cat_target,axis=1)
-
+        
         critic_loss = tf.losses.mean_squared_error(self.target_value,tf.squeeze(self.critic.critic1)) + tf.losses.mean_squared_error(self.target_value,tf.squeeze(self.critic.critic2))
 
         action_grad = tf.clip_by_value(tf.gradients(self.critic.critic1,self.critic.action),-10,10)

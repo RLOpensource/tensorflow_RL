@@ -51,8 +51,7 @@ while True:
         if len(agent.memory) >= 10000:
             agent.train_model()
 
-    print(score, ep)
-
+    
     scores.append(score)
     agent.noise_generator.reset()
     if len(agent.memory) >= 10000 and epsilon >= 0.01:
@@ -61,6 +60,7 @@ while True:
     if ep % 10 == 0:
         update_step += 1
         print(update_step, np.mean(scores), epsilon)
-        writer.add_scalar('data/reward', np.mean(scores), update_step)
+        writer.add_scalar('data/reward_per_episode', np.mean(scores), update_step)
         saver.save(sess, 'bipedalwalker_td3/model')
         scores = []
+    
