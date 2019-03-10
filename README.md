@@ -18,7 +18,7 @@ Discrete Action CNN - Breakout
 Algorithms
 
 ```
-Continuous Action MLP - DDPG, TRPO, PPO
+Continuous Action MLP - DDPG, TD3
 Discrete Action MLP - Vanilla PG, A2C, PPO, DQN, QRDQN, IQN
 Discrete Action CNN - Vanilla PG, A2C, PPO, DQN, QRDQN, IQN
 ```
@@ -68,7 +68,6 @@ tensorboardX
 - [x] Proximal Policy Optimization
 - [x] Deep Deterministic Policy Gradient
 - [x] Value based Reinforcement Learning
-- [ ] Actor Critic Experience Replay
 - [ ] Soft Actor Critic
 - [ ] LSTM train Algorithm
 

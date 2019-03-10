@@ -20,7 +20,7 @@ critic = MLPTD3ContinousCritic('critic',state_size,output_size)
 agent = TD3(sess,state_size,output_size,1,1,target_actor,target_critic,actor,critic)
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
-#saver.restore(sess,'pendulum_ddpg/model')
+#saver.restore(sess,'pendulum_td3/model')
 
 ep_len = 200
 ep = 0
@@ -34,24 +34,23 @@ while True:
     score = 0
     for t in range(ep_len):
         env.render()
-        action = agent.get_action([state], 0)
+        action = agent.get_action([state], epsilon)
 
         action = action[0]
         next_state, reward, done, _ = env.step(clip * action)
 
         score += reward
-        reward -= 0.1*np.abs(action)
 
         agent.get_sample(state,action,reward,next_state,done)
 
         state = next_state
         if len(agent.memory) >= 1000:
             agent.train_model()
-
+    
     agent.noise_generator.reset()
     if len(agent.memory) >= 1000:
         epsilon *= 0.995
     if ep < 300:
         print(ep, score, epsilon)
         writer.add_scalar('data/reward', score, ep)
-        saver.save(sess, 'pendulum_ddpg/model')
+        saver.save(sess, 'pendulum_td3/model')
