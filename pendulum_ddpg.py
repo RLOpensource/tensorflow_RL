@@ -33,14 +33,13 @@ while True:
     total_state, total_reward, total_done, total_next_state, total_action = [], [], [], [], []
     score = 0
     for t in range(ep_len):
-        env.render()
-        action = agent.get_action([state], 0)
+        #env.render()
+        action = agent.get_action([state], epsilon)
 
         action = action[0]
         next_state, reward, done, _ = env.step(clip * action)
 
         score += reward
-        reward -= 0.1*np.abs(action)
 
         agent.get_sample(state,action,reward,next_state,done)
 

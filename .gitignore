@@ -29,3 +29,4 @@ iqn/
 qrdqn/
 bipedalwalker_td3/
 bipedal_rollout_ppo/
+pendulum_td3/

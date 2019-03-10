@@ -1,5 +1,4 @@
 import gym
-from agent.continuous.seperate.ppo import PPO
 from agent.continuous.seperate.ddpg import DDPG
 from agent import utils
 from example_model.policy.mlp.continuous import MLPDDPGContinuousActor
@@ -35,13 +34,13 @@ while True:
     score = 0
     while not done:
 
-        if ep % 10 == 0:
-            env.render()
+        #if ep % 10 == 0:
+        #    env.render()
         #env.render()
         action = agent.get_action([state], epsilon)
 
         action = action[0]
-        next_state, reward, done, _ = env.step(clip * action)
+        next_state, reward, done, _ = env.step(action)
 
         score += reward
 
@@ -56,9 +55,11 @@ while True:
     if len(agent.memory) >= 10000 and epsilon >= 0.01:
         epsilon *= 0.999
         epsilon -= 0.000001
+    print(ep, score)
     if ep % 10 == 0:
         update_step += 1
         print(update_step, np.mean(scores), epsilon)
-        writer.add_scalar('data/reward', score, update_step)
+        if update_step < 600:
+            writer.add_scalar('data/reward', score, update_step)
         saver.save(sess, 'bipedalwalker_ddpg/model')
         scores = []

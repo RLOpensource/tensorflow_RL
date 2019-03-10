@@ -61,7 +61,7 @@ class DDPG:
         rewards = np.asarray([e[2] for e in batch])
         next_states = np.asarray([e[3] for e in batch])
         dones = np.asarray([e[4] for e in batch])
-        target_action_input = np.clip(self.sess.run(self.target_actor.actor,feed_dict={self.target_actor.state:next_states}) + np.random.normal(0,0.01,[self.batch_size,self.action_size]),-1,1)
+        target_action_input = self.sess.run(self.target_actor.actor,feed_dict={self.target_actor.state:next_states})
         target_q_value = self.sess.run(self.target_critic.critic,feed_dict={self.target_critic.state:next_states,
                                                                             self.target_critic.action:target_action_input})
         targets = np.asarray([r + self.gamma * (1-d) * tv for r,tv,d in zip(rewards,target_q_value,dones)])
@@ -82,7 +82,7 @@ class DDPG:
 
     def get_action(self, state, epsilon):
         action = self.sess.run(self.actor.actor,feed_dict={self.actor.state:state})
-        return np.clip(action + epsilon*self.noise_generator.sample(), -1, 1)
+        return np.clip(action + epsilon*self.noise_generator.sample(), -1 + 1e-3, 1 - 1e-3)
 
     def get_sample(self,state,action,reward,next_state,done):
         self.memory.append((state,action,reward,next_state,done))

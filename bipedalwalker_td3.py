@@ -1,5 +1,4 @@
 import gym
-from agent.continuous.seperate.ppo import PPO
 from agent.continuous.seperate.td3 import TD3
 from agent import utils
 from example_model.policy.mlp.continuous import MLPDDPGContinuousActor
@@ -41,7 +40,7 @@ while True:
         action = agent.get_action([state], epsilon)
 
         action = action[0]
-        next_state, reward, done, _ = env.step(clip * action)
+        next_state, reward, done, _ = env.step(action)
 
         score += reward
 
@@ -60,7 +59,8 @@ while True:
     if ep % 10 == 0:
         update_step += 1
         print(update_step, np.mean(scores), epsilon)
-        writer.add_scalar('data/reward_per_episode', np.mean(scores), update_step)
+        if update_step < 300:
+            writer.add_scalar('data/reward', np.mean(scores), update_step)
         saver.save(sess, 'bipedalwalker_td3/model')
         scores = []
     
