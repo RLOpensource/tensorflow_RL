@@ -88,11 +88,11 @@ tensorboardX
 
 ### 2. Continuous Action Pendulum
 
-* Script : pendulum_ppo.py, pendulum_ddpg.py  
+* Script : pendulum_td3.py, pendulum_ddpg.py  
 * Environment : Pendulum-v0
-* Orange : ddpg, Blue: ppo
+* Orange : ddpg, Blue: td3
 * Episode : 300
-* Image : PPO
+* Image : td3
 
 ###### Pendulum
 <div align="center">
