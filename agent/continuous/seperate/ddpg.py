@@ -40,7 +40,8 @@ class DDPG:
         self.target_value = tf.placeholder(tf.float32,shape=[None])
         self.action = tf.placeholder(tf.float32,shape=[None,self.action_size])
 
-        critic_loss = tf.losses.huber_loss(self.target_value,tf.squeeze(self.value))
+        #critic_loss = tf.losses.huber_loss(self.target_value,tf.squeeze(self.value))
+        critic_loss = tf.losses.mean_squared_error(self.target_value,tf.squeeze(self.value))
 
         action_grad = tf.clip_by_value(tf.gradients(self.value,self.critic.action),-10,10)
         #action_grad = tf.gradients(self.value,self.critic.action)
