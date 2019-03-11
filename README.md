@@ -75,15 +75,15 @@ tensorboardX
 
 ### 1. Continuous Action BipedalWalker  
 
-* Script : bipedalwalker_ppo.py, bipedalwalker_ddpg.py  
+* Script : bipedalwalker_td3.py, bipedalwalker_ddpg.py  
 * Environment : BipedalWalker-v2 
-* Orange : ppo, Blue: ddpg
-* Episode : 2165
-* Image : PPO
+* Orange : td3, Blue: ddpg
+* Episode : 600
+* Image : td3
 
 ###### BipedalWalker
 <div align="center">
-  <img src="sources/bipedalwalker_ppo.gif" width="50%" height='300'><img src="sources/bipedalwalker.png" width="50%" height='300'>
+  <img src="sources/bipedalwalker_td3.gif" width="50%" height='300'><img src="sources/bipedalwalker.png" width="50%" height='300'>
 </div>
 
 ### 2. Continuous Action Pendulum
