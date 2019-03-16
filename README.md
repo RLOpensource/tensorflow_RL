@@ -18,7 +18,7 @@ Discrete Action CNN - Breakout
 Algorithms
 
 ```
-Continuous Action MLP - DDPG, TD3
+Continuous Action MLP - DDPG, TD3, PPO
 Discrete Action MLP - Vanilla PG, A2C, PPO, DQN, QRDQN, IQN
 Discrete Action CNN - Vanilla PG, A2C, PPO, DQN, QRDQN, IQN
 ```
@@ -75,9 +75,9 @@ tensorboardX
 
 ### 1. Continuous Action BipedalWalker  
 
-* Script : bipedalwalker_td3.py, bipedalwalker_ddpg.py  
+* Script : bipedalwalker_td3.py, bipedalwalker_ddpg.py, bipedalwalker_ppo.py
 * Environment : BipedalWalker-v2 
-* Orange : td3, Blue: ddpg
+* Orange : td3, Blue: ddpg, SkyBlue: ppo
 * Episode : 600
 * Image : td3
 

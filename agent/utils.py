@@ -1,6 +1,11 @@
 import numpy as np
 import copy
 import collections
+import tensorflow as tf
+
+def gaussian_likelihood(x, mu, log_std):
+    pre_sum = -0.5 * (((x-mu)/(tf.exp(log_std)+1e-8))**2 + 2*log_std + np.log(2*np.pi))
+    return tf.reduce_sum(pre_sum, axis=1)
 
 class Memory:
     def __init__(self, max_length, prioritized):
@@ -53,7 +58,7 @@ def get_gaes(rewards, dones, values, next_values, gamma, lamda, normalize):
 
     target = gaes + values
     if normalize:
-        gaes = (gaes - gaes.mean()) / (gaes.std() + 1e-30)
+        gaes = (gaes - gaes.mean()) / (gaes.std() + 1e-8)
     return gaes, target
 
 def get_rtgs_like_get_gaes(rewards, dones, values, gamma): # get_rtgs for VPG
