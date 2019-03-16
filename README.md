@@ -207,6 +207,12 @@ Please 'just' use these code and just 'refer' the url of repository in any form.
 [11] [Implicit Quantile Networks for Distributional Reinforcement Learning
 ](https://arxiv.org/abs/1806.06923)
 
+[12] [OpenAI Spinningup](https://github.com/openai/spinningup)
+
+[13] [Reinforcement Learning Korea PG Travel](https://github.com/reinforcement-learning-kr/pg_travel)
+
+[14] [Medipixel Reinforcement Learning Repository](https://github.com/medipixel/rl_algorithms)
+
 ### Please fork this repository and contribute to strengthen the tensorflow reinforcement learning ecosystem
 
 ### Support us in any form. Thank you
